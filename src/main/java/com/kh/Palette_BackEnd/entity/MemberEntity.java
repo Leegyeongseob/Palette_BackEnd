@@ -25,10 +25,13 @@ public class MemberEntity {
     private String name;
     private String nickName;
     private String coupleCode;
-    private LocalDateTime regDate;
-    private boolean terms;
+    private String sex;
     @Column(length = 9)
     private int registrationNumber;
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "chat_id")
+    private ChatEntity chat;
 }

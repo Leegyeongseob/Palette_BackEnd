@@ -3,6 +3,7 @@ package com.kh.Palette_BackEnd.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,4 +17,16 @@ public class ChatEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "chat_id")
     private Long id;
+
+    private String chatData;
+
+    private String imgUrl;
+
+    private String emojiUrl;
+
+    private LocalDateTime regDate;
+    @PrePersist
+    public void prePersist(){
+        regDate = LocalDateTime.now();
+    }
 }
