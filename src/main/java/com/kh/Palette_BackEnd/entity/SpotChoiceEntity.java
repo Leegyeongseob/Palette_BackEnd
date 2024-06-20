@@ -16,6 +16,4 @@ public class SpotChoiceEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="spotChoice_id")
     private Long id;
-
-
 }

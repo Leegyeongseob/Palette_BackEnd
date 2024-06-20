@@ -15,7 +15,9 @@ import javax.persistence.*;
 public class CoupleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long coupleId;
+    @Column(name="couple_id")
+    private Long id;
+    // 커플 이메일(아이디)
     private String firstEmail;
     private String secondEmail;
     @Column(unique = true)

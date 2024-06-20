@@ -24,7 +24,7 @@ public class MemberEntity {
     private String pwd;
     private String name;
     private String nickName;
-    private String coupleCode;
+    private String coupleName;
     private String sex;
     @Column(length = 9)
     private int registrationNumber;
@@ -34,4 +34,17 @@ public class MemberEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "chat_id")
     private ChatEntity chat;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="location_id")
+    private LocationEntity location;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="couple_id")
+    private CoupleEntity couple;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="dateClothes_id")
+    private DateClothesEntity dateClothes;
+
 }

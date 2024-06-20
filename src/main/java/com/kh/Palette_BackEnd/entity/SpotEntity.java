@@ -21,4 +21,8 @@ public class SpotEntity {
     private String imgUrl;
     private String title;
     private String context;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="location_id")
+    private LocationEntity location;
 }

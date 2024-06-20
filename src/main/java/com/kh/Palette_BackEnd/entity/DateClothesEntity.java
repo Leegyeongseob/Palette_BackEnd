@@ -17,4 +17,9 @@ public class DateClothesEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="dateClothes_id")
     private Long id;
+
+    private String topClothesUrl;
+    private String pantsClothesUrl;
+    private String onePieceUrl;
+    private String shoesUrl;
 }
