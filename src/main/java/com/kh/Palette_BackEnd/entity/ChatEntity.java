@@ -23,7 +23,7 @@ public class ChatEntity {
     private String imgUrl;
 
     private String emojiUrl;
-    private boolean isread;
+    private boolean isRead;
     private LocalDateTime regDate;
     @PrePersist
     public void prePersist(){
