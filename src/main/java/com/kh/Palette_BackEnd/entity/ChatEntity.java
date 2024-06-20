@@ -23,10 +23,13 @@ public class ChatEntity {
     private String imgUrl;
 
     private String emojiUrl;
-
+    private boolean isread;
     private LocalDateTime regDate;
     @PrePersist
     public void prePersist(){
         regDate = LocalDateTime.now();
+
+
     }
+
 }
