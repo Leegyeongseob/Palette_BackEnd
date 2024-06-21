@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/member")
 @RequiredArgsConstructor
-public class ChatController {
+public class MemberController {
 }

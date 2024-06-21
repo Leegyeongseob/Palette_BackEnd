@@ -23,8 +23,10 @@ public class ChatEntity {
     private String imgUrl;
 
     private String emojiUrl;
-    private boolean isRead;
+    private int isRead;
     private LocalDateTime regDate;
+
+    // DB에 값을 저장할때 시간 값 저장.
     @PrePersist
     public void prePersist(){
         regDate = LocalDateTime.now();

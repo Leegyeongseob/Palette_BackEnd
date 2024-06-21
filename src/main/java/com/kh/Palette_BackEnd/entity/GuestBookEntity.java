@@ -1,35 +1,31 @@
 package com.kh.Palette_BackEnd.entity;
 
-
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Getter
 @Setter
-@Table(name="Board_TB")
+@Table(name="GuestBook_TB")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class BoardEntity {
+public class GuestBookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="board_id")
+    @Column(name="guestBook_id")
     private Long id;
 
     private String Title;
     // 작성 날짜, 시간
     private LocalDateTime RegDate;
-    // 게시물 사진
-    private String imgUrl;
     // 내용
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="Boardlist_id")
-    private BoardListEntity boardList;
+
 
     // DB에 값을 저장할때 시간 값 저장.
     @PrePersist

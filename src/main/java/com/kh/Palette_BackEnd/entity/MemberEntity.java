@@ -26,25 +26,33 @@ public class MemberEntity {
     private String nickName;
     private String coupleName;
     private String sex;
+    private String profileImgUrl;
     @Column(length = 9)
-    private int registrationNumber;
+    private boolean registrationNumber;
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    //둘이서 채팅
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name= "chat_id")
     private ChatEntity chat;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="location_id")
-    private LocationEntity location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="dateClothes_id")
-    private DateClothesEntity dateClothes;
+
+    //작성자를 불러오기 위한 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="guestBook_id")
+    private GuestBookEntity guestBook;
+
+
+    //작성자를 불러오기 위한 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="board_id")
+    private BoardEntity board;
+
 
 }

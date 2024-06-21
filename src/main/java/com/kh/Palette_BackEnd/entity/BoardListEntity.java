@@ -8,14 +8,13 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name="BoardList_TB")
+@Table(name = "BoardList_TB")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class BoardListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="boardList_id")
+    @Column(name="Boardlist_id")
     private Long id;
-
 }

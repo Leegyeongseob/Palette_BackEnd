@@ -20,6 +20,7 @@ public class CoupleEntity {
     // 커플 이메일(아이디)
     private String firstEmail;
     private String secondEmail;
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String coupleName;
+
 }
