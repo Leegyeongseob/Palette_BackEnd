@@ -19,8 +19,6 @@ public class GalleryEntity {
     @Column(name="gallery_id")
     private Long id;
 
-    private String imgUrl;
-
     @Enumerated(EnumType.STRING)
     private PagePlusSellStatus pagePlusSellStatus;
 
