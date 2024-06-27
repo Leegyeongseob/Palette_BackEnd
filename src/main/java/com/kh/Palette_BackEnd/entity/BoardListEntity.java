@@ -15,6 +15,6 @@ import javax.persistence.*;
 public class BoardListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="Boardlist_id")
+    @Column(name="boardList_id")
     private Long id;
 }

@@ -39,24 +39,13 @@ public class MemberEntity {
     @JoinColumn(name= "chat_id")
     private ChatEntity chat;
 
-
+    //두명을 한 커플로 묶기 위한 조인
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
 
 
-    //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="guestBook_id")
-    private GuestBookEntity guestBook;
-
-
-    //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="board_id")
-    private BoardEntity board;
-
-    // 엔티티가 영속성 컨텍스트에 저장되기 전 자동으로 호출되는 메서드
+    // 엔티티가 영속성 컨텍스트에 저장되기 전 자동으로 호출되는 메서드(주민번호로 성별 저장)
     @PrePersist
     @PreUpdate
     private void setSexBasedOnRegistrationNumber() {

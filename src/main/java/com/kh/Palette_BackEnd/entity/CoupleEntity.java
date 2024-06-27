@@ -4,6 +4,7 @@ package com.kh.Palette_BackEnd.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -22,5 +23,7 @@ public class CoupleEntity {
     private String secondEmail;
     @Column(unique = true,nullable = false)
     private String coupleName;
+
+    private Date datingDay;
 
 }

@@ -24,7 +24,14 @@ public class GalleryEntity {
 
     private int openPage;
 
+
+    // 커플모두 볼수 있어야함. 저장 데이터 불러오기
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
+
+    // 사진 올리는 계정 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="email")
+    private MemberEntity member;
 }

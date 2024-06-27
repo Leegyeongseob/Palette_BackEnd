@@ -20,6 +20,8 @@ public class GalleryListEntity {
 
     private String imgUrl;
 
+
+    // 한명의 갤러리에 여러개의 이미지 사진
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="gallery_id")
     private GalleryEntity gallery;

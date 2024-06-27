@@ -27,8 +27,14 @@ public class BoardEntity {
     // 내용
     private String contents;
 
+    //작성자를 불러오기 위한 조인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="Boardlist_id")
+    @JoinColumn(name ="email")
+    private MemberEntity member;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="boardList_id")
     private BoardListEntity boardList;
 
     // DB에 값을 저장할때 시간 값 저장.

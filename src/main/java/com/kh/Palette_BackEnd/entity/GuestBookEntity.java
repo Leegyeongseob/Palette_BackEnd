@@ -26,6 +26,11 @@ public class GuestBookEntity {
     private String contents;
 
 
+    //작성자를 불러오기 위한 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="email")
+    private MemberEntity member;
+
 
     // DB에 값을 저장할때 시간 값 저장.
     @PrePersist
