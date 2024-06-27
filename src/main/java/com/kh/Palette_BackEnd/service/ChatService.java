@@ -2,8 +2,6 @@ package com.kh.Palette_BackEnd.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kh.Palette_BackEnd.dto.ChatMessageDto;
-import com.kh.Palette_BackEnd.dto.resdto.ChatRoomResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
