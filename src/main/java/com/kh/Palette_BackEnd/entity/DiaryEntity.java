@@ -27,4 +27,8 @@ public class DiaryEntity {
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="email")
+    private MemberEntity member;
+
 }

@@ -2,6 +2,7 @@ package com.kh.Palette_BackEnd.entity;
 
 
 import com.kh.Palette_BackEnd.constant.Authority;
+import com.kh.Palette_BackEnd.constant.Sex;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,10 +26,11 @@ public class MemberEntity {
     private String name;
     private String nickName;
     private String coupleName;
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
     private String profileImgUrl;
-    @Column(length = 9)
-    private boolean registrationNumber;
+    @Column(length = 7)
+    private int registrationNumber;
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -53,6 +55,25 @@ public class MemberEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="board_id")
     private BoardEntity board;
+
+    // 엔티티가 영속성 컨텍스트에 저장되기 전 자동으로 호출되는 메서드
+    @PrePersist
+    @PreUpdate
+    private void setSexBasedOnRegistrationNumber() {
+        String regNumberStr = String.valueOf(this.registrationNumber);
+        if (regNumberStr.length() >= 7) {
+            char genderChar = regNumberStr.charAt(6); // 0-based index, 6번째 인덱스는 7번째 자리
+            if (genderChar == '1' || genderChar == '3') {
+                this.sex = Sex.Man;
+            } else if (genderChar == '2' || genderChar == '4') {
+                this.sex = Sex.Woman;
+            } else {
+                throw new IllegalArgumentException("유효하지 않은 주민등록번호입니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 주민등록번호입니다.");
+        }
+    }
 
 
 }
