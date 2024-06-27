@@ -26,6 +26,16 @@ public class ChatEntity {
     private int isRead;
     private LocalDateTime regDate;
 
+    @Column(name="room_id")
+    private String roomId;
+
+    @Column(name="sender")
+    private String sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
+    private MemberEntity member;
+
     // DB에 값을 저장할때 시간 값 저장.
     @PrePersist
     public void prePersist(){
