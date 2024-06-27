@@ -19,7 +19,6 @@ import java.util.Optional;
 
 
 @SpringBootTest
-@Transactional
 @Slf4j
 @TestPropertySource(locations = "classpath:application_test.properties")
 class MemberRepositoryTest {
@@ -43,9 +42,12 @@ class MemberRepositoryTest {
         MemberEntity user = createMemberInfo();
         memberRepository.saveAndFlush(user);
         em.clear();
-        Optional<MemberEntity> member = memberRepository.findByEmail("can34879@naver.com");
-        if (member.isPresent()){
-            log.info("존재합니다."+ member.get());
-        }
+    }
+    @Test
+    @DisplayName("이메일 중복 테스트")
+    public void emailIsExist(){
+        MemberEntity user = createMemberInfo();
+        boolean isTrue = memberRepository.existsByEmail(user.getEmail());
+        log.info(String.valueOf(isTrue));
     }
 }

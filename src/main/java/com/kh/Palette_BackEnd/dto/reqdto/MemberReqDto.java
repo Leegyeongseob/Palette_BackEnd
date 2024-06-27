@@ -5,6 +5,8 @@ import com.kh.Palette_BackEnd.constant.Authority;
 import com.kh.Palette_BackEnd.entity.MemberEntity;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import javax.persistence.Column;
 
 
@@ -13,6 +15,7 @@ import javax.persistence.Column;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@CrossOrigin("http://localhost:3000")
 public class MemberReqDto {
     private String email;
     private String pwd;

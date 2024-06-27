@@ -12,6 +12,7 @@ import com.kh.Palette_BackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -31,12 +32,22 @@ public class AuthService {
     private final TokenProvider tokenProvider;
 
     //회원가입
-    public MemberResDto signup(MemberReqDto requestDto) {
-        if (memberRepository.existsByEmail(requestDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+    public String signup(MemberReqDto requestDto) {
+        try {
+            MemberEntity member = requestDto.toMemberEntity(passwordEncoder);
+            memberRepository.save(member);
+            return "Success";
+        }catch (DataAccessException e) {
+            // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
+            return "회원가입 실패: 데이터베이스 접근 중 오류가 발생했습니다.";
+        } catch (Exception e) {
+            // 그 외의 예외 처리
+            return "회원가입 중 오류가 발생했습니다.";
         }
-        MemberEntity member = requestDto.toMemberEntity(passwordEncoder);
-        return MemberResDto.of(memberRepository.save(member));
+    }
+    // 이메일 중복확인
+    public boolean isExistEmail(String Email){
+        return memberRepository.existsByEmail(Email);
     }
 
     public TokenDto login(LoginReqDto requestDto) {
