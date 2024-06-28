@@ -1,7 +1,7 @@
-package com.kh.jpatotalapp.service;
+package com.kh.Palette_BackEnd.service;
 
-import com.kh.jpatotalapp.entity.Member;
-import com.kh.jpatotalapp.repository.MemberRepository;
+import com.kh.Palette_BackEnd.entity.MemberEntity;
+import com.kh.Palette_BackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,13 +27,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username + " 을 DB에서 찾을 수 없습니다"));
     }
     // DB에서 가져온 회원 정보를 UserDetails 타입으로 변환한다.
-    private UserDetails createUserDetails(Member member) {
+    private UserDetails createUserDetails(MemberEntity member) {
         // 권한 정보를 문자열로 변환
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
         // UserDetails 타입의 객체를 생성해 리턴
         return new User(
                 String.valueOf(member.getId()),
-                member.getPassword(),
+                member.getPwd(),
                 Collections.singleton(grantedAuthority)
         );
     }
