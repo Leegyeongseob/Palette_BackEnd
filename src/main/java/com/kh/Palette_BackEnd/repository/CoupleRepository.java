@@ -1,4 +1,11 @@
 package com.kh.Palette_BackEnd.repository;
 
-public interface CoupleRepository {
+import com.kh.Palette_BackEnd.entity.CoupleEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CoupleRepository extends JpaRepository<CoupleEntity,Long> {
+    boolean existsByCoupleName(String coupleName);
+    CoupleEntity findByCoupleName(String coupleName);
 }
