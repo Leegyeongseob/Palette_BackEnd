@@ -61,4 +61,9 @@ public class AuthController {
     public ResponseEntity<String>coupleSearch(@RequestBody Map<String,String> email){
         return ResponseEntity.ok(authService.emailToCoupleNameSearch(email.get("email")));
     }
+    //두번째 커플 계정 존재 확인
+    @PostMapping("/secondEmailExist")
+    public  ResponseEntity<Boolean> secondEmailExist(@RequestBody Map<String,String> coupleName){
+        return ResponseEntity.ok(authService.secondEmailExist(coupleName.get("couple")));
+    }
 }

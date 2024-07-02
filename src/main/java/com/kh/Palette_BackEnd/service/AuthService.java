@@ -142,5 +142,12 @@ public class AuthService {
                 return "커플이름 search 중 오류가 발생했습니다.";
             }
         }
+    //두번째 커플 계정 존재 확인
+    public boolean secondEmailExist(String coupleName) {
+        return coupleRepository.findByCoupleName(coupleName)
+                .map(entity -> entity.getSecondEmail() != null && coupleRepository.existsBySecondEmail(entity.getSecondEmail()))
+                .orElse(false);
     }
+
+}
 

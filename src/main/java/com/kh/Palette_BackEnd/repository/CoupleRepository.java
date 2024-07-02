@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface CoupleRepository extends JpaRepository<CoupleEntity,Long> {
     boolean existsByCoupleName(String coupleName);
     Optional<CoupleEntity> findByCoupleName(String coupleName);
+    boolean existsBySecondEmail(String coupleName);
 //    boolean existByDatingDay(String coupleName);
 }
