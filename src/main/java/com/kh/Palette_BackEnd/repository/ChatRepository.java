@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ChatRepository extends JpaRepository<ChatEntity, Long> {
-    List<ChatEntity> findByRoomIdOrderByRegDateAsc(String roomId);
+    List<ChatEntity> findBySenderAndReceiverOrderByRegDateAsc(String sender, String receiver);
 }
