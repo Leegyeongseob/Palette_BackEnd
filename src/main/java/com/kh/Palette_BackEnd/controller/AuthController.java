@@ -52,4 +52,9 @@ public class AuthController {
     public ResponseEntity<String>coupleEmailCheck(@RequestBody Map<String,String> coupleName){
         return ResponseEntity.ok(authService.coupleEmailCheck(coupleName.get("coupleName")));
     }
+    // 커플에 계정 추가 등록
+    @PostMapping("/secondCoupleNameInsert")
+    public ResponseEntity<String> secondCoupleNameInsert(@RequestBody CoupleReqDto requestDto){
+        return ResponseEntity.ok(authService.secondCoupleNameInsert(requestDto));
+    }
 }

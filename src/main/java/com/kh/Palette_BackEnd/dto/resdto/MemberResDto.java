@@ -26,7 +26,6 @@ public class MemberResDto {
                 .email(member.getEmail())
                 .name(member.getName())
                 .nickName(member.getNickName())
-                .coupleName(member.getCoupleName())
                 .build();
     }
 }

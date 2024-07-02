@@ -25,6 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -42,7 +43,12 @@ public class AuthService {
     //회원가입
     public String signup(MemberReqDto requestDto) {
         try {
+            //Dto to Entity
             MemberEntity member = requestDto.toMemberEntity(passwordEncoder);
+            //coupleName을 찾아서 추가
+            Optional<CoupleEntity> coupleEntity = coupleRepository.findByCoupleName(requestDto.getCoupleName());
+            // 조인부분에 추가
+            coupleEntity.ifPresent(member::setCouple);
             memberRepository.saveAndFlush(member);
             em.clear();
             return "Success";
@@ -75,21 +81,14 @@ public class AuthService {
         return coupleRepository.existsByCoupleName(coupleName);
     }
     // 커플이름 Insert
-    public String coupleNameInsert(CoupleReqDto requestDto){
-        CoupleEntity coupleEntity;
-        boolean isExist = coupleRepository.existsByCoupleName(requestDto.getCoupleName());
-        try {
-            if(isExist){
-                coupleEntity = coupleRepository.findByCoupleName(requestDto.getCoupleName());
-                coupleEntity.setSecondEmail(requestDto.getEmail());
-            }
-            else {
-                coupleEntity = new CoupleEntity();
-                coupleEntity.setCoupleName(requestDto.getCoupleName());
-                coupleEntity.setFirstEmail(requestDto.getEmail());
-            }
-            coupleRepository.saveAndFlush(coupleEntity);
-            em.clear();
+    public String coupleNameInsert(CoupleReqDto requestDto)
+    {
+        try{
+        CoupleEntity coupleEntity = new CoupleEntity();
+        coupleEntity.setCoupleName(requestDto.getCoupleName());
+        coupleEntity.setFirstEmail(requestDto.getEmail());
+        coupleRepository.saveAndFlush(coupleEntity);
+        em.clear();
             return "Success";
         }catch (DataAccessException e) {
             // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
@@ -100,8 +99,30 @@ public class AuthService {
         }
     }
     // 커플이름 중복 시 짝 이메일을 확인하는 함수
-    public String coupleEmailCheck(String coupleName){
-        CoupleEntity coupleEntity = coupleRepository.findByCoupleName(coupleName);
-        return coupleEntity.getFirstEmail();
+    public String coupleEmailCheck(String coupleName) {
+        Optional<CoupleEntity> coupleEntity = coupleRepository.findByCoupleName(coupleName);
+        return coupleEntity.map(CoupleEntity::getFirstEmail).orElse(null);
+    }
+    // 커플 테이블에 계정 추가
+    public String secondCoupleNameInsert(CoupleReqDto coupleReqDto) {
+        try {
+            Optional<CoupleEntity> coupleEntity = coupleRepository.findByCoupleName(coupleReqDto.getCoupleName());
+            if (coupleEntity.isPresent()) {
+                CoupleEntity entity = coupleEntity.get();
+                entity.setSecondEmail(coupleReqDto.getEmail());
+                coupleRepository.saveAndFlush(entity);
+                em.clear();
+                return "Success";
+            } else {
+                return "계정추가 실패: 해당 이름의 커플이 존재하지 않습니다.";
+            }
+        } catch (DataAccessException e) {
+            // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
+            return "계정추가 실패: 데이터베이스 접근 중 오류가 발생했습니다.";
+        } catch (Exception e) {
+            // 그 외의 예외 처리
+            return "계정추가 중 오류가 발생했습니다.";
+        }
     }
 }
+

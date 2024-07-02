@@ -21,7 +21,7 @@ public class MemberReqDto {
     private String pwd;
     private String name;
     @Column(length = 7)
-    private int registrationNumber;
+    private String registrationNumber;
     private String nickName;
     private String coupleName;
 
@@ -32,8 +32,6 @@ public class MemberReqDto {
                 .pwd(passwordEncoder.encode(pwd))
                 .name(name)
                 .registrationNumber(registrationNumber)
-                .nickName(nickName)
-                .coupleName(coupleName)
                 .authority(Authority.ROLL_USER)
                 .build();
     }

@@ -25,12 +25,11 @@ public class MemberEntity {
     private String pwd;
     private String name;
     private String nickName;
-    private String coupleName;
     @Enumerated(EnumType.STRING)
     private Sex sex;
     private String profileImgUrl;
     @Column(length = 7)
-    private int registrationNumber;
+    private String registrationNumber;
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -41,7 +40,7 @@ public class MemberEntity {
 
     //두명을 한 커플로 묶기 위한 조인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="couple_id")
+    @JoinColumn(name="coupleName")
     private CoupleEntity couple;
 
 
@@ -49,8 +48,8 @@ public class MemberEntity {
     @PrePersist
     @PreUpdate
     private void setSexBasedOnRegistrationNumber() {
-        String regNumberStr = String.valueOf(this.registrationNumber);
-        if (regNumberStr.length() >= 7) {
+        String regNumberStr = this.registrationNumber;
+        if (regNumberStr != null && regNumberStr.length() >= 7) {
             char genderChar = regNumberStr.charAt(6); // 0-based index, 6번째 인덱스는 7번째 자리
             if (genderChar == '1' || genderChar == '3') {
                 this.sex = Sex.Man;
