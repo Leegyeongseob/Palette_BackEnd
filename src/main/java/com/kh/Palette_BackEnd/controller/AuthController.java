@@ -5,7 +5,6 @@ import com.kh.Palette_BackEnd.dto.TokenDto;
 import com.kh.Palette_BackEnd.dto.reqdto.CoupleReqDto;
 import com.kh.Palette_BackEnd.dto.reqdto.LoginReqDto;
 import com.kh.Palette_BackEnd.dto.reqdto.MemberReqDto;
-import com.kh.Palette_BackEnd.dto.resdto.MemberResDto;
 import com.kh.Palette_BackEnd.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,5 +55,10 @@ public class AuthController {
     @PostMapping("/secondCoupleNameInsert")
     public ResponseEntity<String> secondCoupleNameInsert(@RequestBody CoupleReqDto requestDto){
         return ResponseEntity.ok(authService.secondCoupleNameInsert(requestDto));
+    }
+    //이메일로 커플이름 search
+    @PostMapping("/emailToCoupleNameSearch")
+    public ResponseEntity<String>coupleSearch(@RequestBody Map<String,String> email){
+        return ResponseEntity.ok(authService.emailToCoupleNameSearch(email.get("email")));
     }
 }

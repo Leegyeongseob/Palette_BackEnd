@@ -31,6 +31,7 @@ public class MemberReqDto {
                 .email(email)
                 .pwd(passwordEncoder.encode(pwd))
                 .name(name)
+                .nickName(nickName)
                 .registrationNumber(registrationNumber)
                 .authority(Authority.ROLL_USER)
                 .build();

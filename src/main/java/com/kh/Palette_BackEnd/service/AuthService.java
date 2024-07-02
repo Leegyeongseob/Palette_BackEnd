@@ -71,7 +71,6 @@ public class AuthService {
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
 
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-
         return tokenProvider.generateTokenDto(authentication);
     }
 
@@ -124,5 +123,24 @@ public class AuthService {
             return "계정추가 중 오류가 발생했습니다.";
         }
     }
-}
+    // email로 커플이름 search
+    public String emailToCoupleNameSearch(String email){
+        try {
+            Optional<MemberEntity> memberEntity = memberRepository.findByEmail(email);
+            if (memberEntity.isPresent()) {
+                MemberEntity member = memberEntity.get();
+                log.info(member.getCouple().getCoupleName());
+                return member.getCouple().getCoupleName();
+            } else {
+                return "계정이 존재하지 않습니다.";
+            }
+        }catch (DataAccessException e) {
+                // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
+                return "커플이름 search 실패: 데이터베이스 접근 중 오류가 발생했습니다.";
+            } catch (Exception e) {
+                // 그 외의 예외 처리
+                return "커플이름 search 중 오류가 발생했습니다.";
+            }
+        }
+    }
 
