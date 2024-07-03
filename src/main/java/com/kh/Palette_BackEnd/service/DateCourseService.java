@@ -116,8 +116,8 @@ public class DateCourseService {
         placeDTO.setRoad_address_name(placeEntity.getRoad_address_name());
         placeDTO.setPhone(placeEntity.getPhone());
         placeDTO.setPlace_url(placeEntity.getPlace_url());
-        placeDTO.setX(placeDTO.getX());
-        placeDTO.setY(placeDTO.getY());
+        placeDTO.setX(placeEntity.getX());
+        placeDTO.setY(placeEntity.getY());
         placeDTO.setPlaceOrder(placeEntity.getPlaceOrder());
         return placeDTO;
     }
