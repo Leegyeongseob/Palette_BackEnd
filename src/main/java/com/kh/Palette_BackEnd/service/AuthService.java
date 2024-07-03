@@ -134,7 +134,7 @@ public class AuthService {
             } else {
                 return "계정이 존재하지 않습니다.";
             }
-        }catch (DataAccessException e) {
+        }  catch (DataAccessException e) {
                 // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
                 return "커플이름 search 실패: 데이터베이스 접근 중 오류가 발생했습니다.";
             } catch (Exception e) {
