@@ -1,10 +1,11 @@
 package com.kh.Palette_BackEnd.entity;
 
-
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,26 +17,27 @@ import java.time.LocalDate;
 public class DateCourseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="dateCourse_id")
+    @Column(name = "dateCourse_id")
     private Long id;
 
     // 데이트 코스명
-    private String Title;
+    private String title;
+
     // 코스 장소들
-    private String place;
-    // 코스 메모
-    private String memo;
+    @OneToMany(mappedBy = "dateCourse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("placeOrder ASC") // order 필드를 기준으로 오름차순 정렬
+    private final List<PlaceEntity> places = new ArrayList<>();
+
     // 저장 날짜
     private LocalDate date;
 
     // 커플이 둘다 저장된 코스를 볼 수 있어야 함.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="couple_id")
+    @JoinColumn(name = "couple_id")
     private CoupleEntity couple;
 
-
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         date = LocalDate.now();
     }
 }
