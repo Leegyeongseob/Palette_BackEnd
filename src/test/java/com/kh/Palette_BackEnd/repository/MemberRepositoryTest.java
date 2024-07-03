@@ -32,8 +32,7 @@ class MemberRepositoryTest {
                 .pwd("1q2w3e4r!@")
                 .name("이경섭")
                 .nickName("멘도롱또돗")
-                .coupleName("알콩달콩")
-                .registrationNumber(9403101)
+                .registrationNumber("9403101")
                 .build();
     }
     @Test
