@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/main")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000") // 클라이언트의 주소로 변경
 public class MainController {
     private final MainService mainService;
     //커플이름으로 닉네임 찾기
