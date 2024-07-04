@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/course") // 이 컨트롤러의 기본 URL 경로
-@CrossOrigin("http://localhost:3000") // CORS 설정: 특정 클라이언트에서의 접근을 허용
+//@CrossOrigin("http://localhost:3000") // CORS 설정: 특정 클라이언트에서의 접근을 허용
 @Slf4j // 롬복을 사용하여 로깅을 위한 Logger를 자동으로 생성
 public class DateCourseController {
     @Autowired
