@@ -30,7 +30,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.kh.TotalEx"))
+                .apis(RequestHandlerSelectors.basePackage("com.kh.Palette_BackEnd"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(List.of(apiKey()))

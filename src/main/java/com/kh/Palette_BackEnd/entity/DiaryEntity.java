@@ -18,11 +18,12 @@ public class DiaryEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="diary_id")
     private Long id;
-    // 해당 날짜
-    private LocalDate dDay;
 
     //기념일
     private LocalDate anniversary;
+
+    // 해당 날짜
+    private String dateContents;
 
     // 해당 날짜의 상세내용.
     private String contents;
