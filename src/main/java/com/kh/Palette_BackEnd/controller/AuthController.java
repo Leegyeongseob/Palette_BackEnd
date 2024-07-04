@@ -26,6 +26,12 @@ public class AuthController {
     public ResponseEntity<Boolean> emailIsExist(@RequestBody Map<String,String> email){
         return ResponseEntity.ok(authService.isExistEmail(email.get("email")));
     }
+    // accessToken 재발급
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refreshToken(@RequestBody String refreshToken) {
+        log.info("refreshToken: {}", refreshToken);
+        return ResponseEntity.ok(authService.createAccessToken(refreshToken));
+    }
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody MemberReqDto requestDto){

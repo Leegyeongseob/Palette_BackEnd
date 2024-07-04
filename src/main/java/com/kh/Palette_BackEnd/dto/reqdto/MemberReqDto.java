@@ -15,7 +15,6 @@ import javax.persistence.Column;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@CrossOrigin("http://localhost:3000")
 public class MemberReqDto {
     private String email;
     private String pwd;

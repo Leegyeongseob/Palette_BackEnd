@@ -1,7 +1,7 @@
 package com.kh.Palette_BackEnd.controller;
 
 
-import com.kh.Palette_BackEnd.dto.reqdto.MemberReqDto;
+import com.kh.Palette_BackEnd.dto.reqdto.MemberUpdateReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.MemberResDto;
 import com.kh.Palette_BackEnd.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class MemberController {
         return ResponseEntity.ok(memberService.memberAxios(email.get("email")));
     }
     @PostMapping("/modify")
-    public ResponseEntity<String> memberModify(@RequestBody MemberReqDto memberReqDto){
-        return ResponseEntity.ok(memberService.memberModify(memberReqDto));
+    public ResponseEntity<String> memberModify(@RequestBody MemberUpdateReqDto memberUpdateReqDto){
+        return ResponseEntity.ok(memberService.memberModify(memberUpdateReqDto));
     }
     @PostMapping("/delete")
     public ResponseEntity<String> memberDelete(@RequestBody Map<String,String> email){

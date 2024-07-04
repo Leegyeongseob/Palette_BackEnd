@@ -73,7 +73,11 @@ public class AuthService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
         return tokenProvider.generateTokenDto(authentication);
     }
-
+    // accessToken 재발급
+    public String createAccessToken(String refreshToken) {
+        Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+        return tokenProvider.generateAccessToken(authentication);
+    }
 
     // 커플이름 중복확인
     public boolean coupleNameSearch(String coupleName) {
