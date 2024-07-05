@@ -4,6 +4,7 @@ package com.kh.Palette_BackEnd.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,11 +19,23 @@ public class DiaryCheckListEntity {
     @Column(name="diaryCheckList_id")
     private Long id;
     // 체크리스트 내용
-    private String contents;
 
+    // 체크리스트 내용
+    @ElementCollection
+    @CollectionTable(name = "event", joinColumns = @JoinColumn(name = "diaryCheckList_id"))
+    private List<Event> events;
 
-    // 계정 다이어리 하나에 안에 여러 체크 리스트 값 추가
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="diary_id")
-    private DiaryEntity diaryCheck;
+    @ManyToOne
+    @JoinColumn(name = "diary_id")
+    private DiaryEntity diary;
+
+    @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Event {
+        private boolean isEvent;
+        private String eventText;
+    }
 }
