@@ -13,6 +13,7 @@ import javax.persistence.Column;
 public class MemberUpdateReqDto {
     private String email;
     private String updateEmail;
+    private String pwd;
     private String name;
     private String nickName;
     private String coupleName;

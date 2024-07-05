@@ -20,15 +20,17 @@ import java.util.Map;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-
+    // 정보 불러오기
     @PostMapping("/info")
     public ResponseEntity<MemberResDto> memberAxios(@RequestBody Map<String,String> email){
         return ResponseEntity.ok(memberService.memberAxios(email.get("email")));
     }
+    //회원 수정
     @PostMapping("/modify")
     public ResponseEntity<String> memberModify(@RequestBody MemberUpdateReqDto memberUpdateReqDto){
         return ResponseEntity.ok(memberService.memberModify(memberUpdateReqDto));
     }
+    //회원 삭제
     @PostMapping("/delete")
     public ResponseEntity<String> memberDelete(@RequestBody Map<String,String> email){
         return ResponseEntity.ok(memberService.memberDelete(email.get("email")));

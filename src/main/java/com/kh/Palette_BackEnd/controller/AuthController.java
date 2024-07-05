@@ -2,9 +2,7 @@ package com.kh.Palette_BackEnd.controller;
 
 
 import com.kh.Palette_BackEnd.dto.TokenDto;
-import com.kh.Palette_BackEnd.dto.reqdto.CoupleReqDto;
-import com.kh.Palette_BackEnd.dto.reqdto.LoginReqDto;
-import com.kh.Palette_BackEnd.dto.reqdto.MemberReqDto;
+import com.kh.Palette_BackEnd.dto.reqdto.*;
 import com.kh.Palette_BackEnd.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +67,17 @@ public class AuthController {
     }
     //두번째 커플 계정 존재 확인
     @PostMapping("/secondEmailExist")
-    public  ResponseEntity<Boolean> secondEmailExist(@RequestBody Map<String,String> coupleName){
+    public ResponseEntity<Boolean> secondEmailExist(@RequestBody Map<String,String> coupleName){
         return ResponseEntity.ok(authService.secondEmailExist(coupleName.get("couple")));
+    }
+    //아이디 찾기
+    @PostMapping("findIdResult")
+    public ResponseEntity<String> findIdResult(@RequestBody FindIdReqDto findIdReqDto){
+        return ResponseEntity.ok(authService.findIdResult(findIdReqDto));
+    }
+    //비밀번호 찾기
+    @PostMapping("findPwdResult")
+    public ResponseEntity<String> fondPwdResult(@RequestBody FindPwdDto findPwdDto){
+        return ResponseEntity.ok(authService.findPwdResult(findPwdDto));
     }
 }

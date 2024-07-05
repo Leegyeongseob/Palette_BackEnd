@@ -3,9 +3,7 @@ package com.kh.Palette_BackEnd.service;
 
 
 import com.kh.Palette_BackEnd.dto.TokenDto;
-import com.kh.Palette_BackEnd.dto.reqdto.CoupleReqDto;
-import com.kh.Palette_BackEnd.dto.reqdto.LoginReqDto;
-import com.kh.Palette_BackEnd.dto.reqdto.MemberReqDto;
+import com.kh.Palette_BackEnd.dto.reqdto.*;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
 import com.kh.Palette_BackEnd.entity.MemberEntity;
 import com.kh.Palette_BackEnd.jwt.TokenProvider;
@@ -26,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -151,6 +150,30 @@ public class AuthService {
         return coupleRepository.findByCoupleName(coupleName)
                 .map(entity -> entity.getSecondEmail() != null && coupleRepository.existsBySecondEmail(entity.getSecondEmail()))
                 .orElse(false);
+    }
+    // 아이디 찾기
+    public String findIdResult(FindIdReqDto findIdReqDto){
+        Optional<MemberEntity> memberEntity = memberRepository.findEmailByNameAndRegistrationNumber(findIdReqDto.getName(),findIdReqDto.getRegistrationNumber());
+        if(memberEntity.isPresent()){
+            return memberEntity.get().getEmail();
+        }
+        else{
+            return "";
+        }
+    }
+    // 비밀번호 찾기
+    public String findPwdResult(FindPwdDto findPwdDto){
+        Optional<MemberEntity> memberEntityOpt =memberRepository.findPwdByEmailAndNameAndRegistrationNumber(findPwdDto.getEmail(),findPwdDto.getName(),findPwdDto.getRegistrationNumber());
+        if(memberEntityOpt.isPresent()){
+            MemberEntity memberEntity = memberEntityOpt.get();
+            String temporaryPwd = UUID.randomUUID().toString().substring(0, 8);
+            memberEntity.setPwd(passwordEncoder.encode(temporaryPwd));
+            memberRepository.save(memberEntity);
+            return temporaryPwd;
+        }
+        else{
+            return"";
+        }
     }
 
 }

@@ -11,11 +11,11 @@ import com.kh.Palette_BackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PrePersist;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -26,6 +26,7 @@ import java.util.Optional;
 public class MemberService {
     private final CoupleRepository coupleRepository;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
 
     @PersistenceContext
     EntityManager em;
@@ -48,6 +49,7 @@ public class MemberService {
             {
                 MemberEntity member = memberEntity.get();
                 member.setEmail(memberUpdateReqDto.getUpdateEmail());
+                member.setPwd(passwordEncoder.encode(memberUpdateReqDto.getPwd()));
                 member.setName(memberUpdateReqDto.getName());
                 member.setNickName(memberUpdateReqDto.getNickName());
                 member.getCouple().setCoupleName(memberUpdateReqDto.getCoupleName());
