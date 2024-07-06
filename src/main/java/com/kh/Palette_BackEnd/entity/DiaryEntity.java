@@ -1,6 +1,7 @@
 package com.kh.Palette_BackEnd.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class DiaryEntity {
 
     private String email;
 
-    //기념일
+
     private LocalDate anniversary;
 
     // 해당 날짜 상세내용
@@ -30,6 +31,10 @@ public class DiaryEntity {
     // 해당 날짜의 일기
     private String contents;
 
+    @ManyToOne
+    @JoinColumn(name = "couple_id", nullable = false)
+    @JsonBackReference
+    private CoupleEntity couple;
 
 
 }

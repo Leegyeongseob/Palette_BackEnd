@@ -1,10 +1,12 @@
 package com.kh.Palette_BackEnd.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,5 +27,9 @@ public class CoupleEntity {
     private String coupleName;
 
     private Date datingDay;
+
+    @OneToMany(mappedBy = "couple", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<DiaryEntity> diaries;
 
 }

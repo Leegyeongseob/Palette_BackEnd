@@ -3,6 +3,7 @@ package com.kh.Palette_BackEnd.controller;
 
 import com.kh.Palette_BackEnd.dto.reqdto.DiaryReqDto;
 import com.kh.Palette_BackEnd.entity.DiaryEntity;
+import com.kh.Palette_BackEnd.resdto.DiaryResDto;
 import com.kh.Palette_BackEnd.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,5 +24,11 @@ public class DiaryController {
     public ResponseEntity<DiaryEntity> saveDiary(@RequestBody DiaryReqDto diaryReqDto) {
         DiaryEntity savedDiary = diaryService.saveDiary(diaryReqDto);
         return ResponseEntity.ok(savedDiary);
+    }
+
+    @GetMapping("/load")
+    public ResponseEntity<List<DiaryResDto>> getDiariesByEmail(@RequestParam String email) {
+        List<DiaryResDto> diaries = diaryService.getDiariesByEmail(email);
+        return ResponseEntity.ok(diaries);
     }
 }
