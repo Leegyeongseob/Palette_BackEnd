@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -30,5 +31,12 @@ public class DiaryController {
     public ResponseEntity<List<DiaryResDto>> getDiariesByEmail(@RequestParam String email) {
         List<DiaryResDto> diaries = diaryService.getDiariesByEmail(email);
         return ResponseEntity.ok(diaries);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteDiary(@RequestParam String email, @RequestParam String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        diaryService.deleteDiaryByEmailAndDate(email, localDate);
+        return ResponseEntity.ok().build();
     }
 }

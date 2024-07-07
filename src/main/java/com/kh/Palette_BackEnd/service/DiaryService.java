@@ -116,4 +116,16 @@ public class DiaryService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteDiaryByEmailAndDate(String email, LocalDate date) {
+        CoupleEntity couple = coupleRepository.findByFirstEmailOrSecondEmail(email, email)
+                .orElseThrow(() -> new RuntimeException("Couple not found"));
+
+        DiaryEntity diary = diaryRepository.findByCoupleAndAnniversary(couple, date)
+                .orElseThrow(() -> new RuntimeException("Diary not found"));
+
+        diaryCheckListRepository.deleteByDiary(diary);
+        diaryRepository.delete(diary);
+    }
 }

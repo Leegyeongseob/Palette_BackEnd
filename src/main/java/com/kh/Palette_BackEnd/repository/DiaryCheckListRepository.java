@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface DiaryCheckListRepository extends JpaRepository<DiaryCheckListEntity,Long> {
     Optional<DiaryCheckListEntity> findByDiary(DiaryEntity diary);
+
+    void deleteByDiary(DiaryEntity diary);
 }
