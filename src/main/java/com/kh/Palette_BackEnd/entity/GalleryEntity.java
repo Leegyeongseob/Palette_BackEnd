@@ -32,6 +32,6 @@ public class GalleryEntity {
 
     // 사진 올리는 계정 조인
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="email")
+    @JoinColumn(name="member_id")
     private MemberEntity member;
 }

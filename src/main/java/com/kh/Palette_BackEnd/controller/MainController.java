@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -32,6 +31,4 @@ public class MainController {
     public ResponseEntity<Boolean> saveDday(@RequestParam String coupleName, @RequestParam String dDay){
         return ResponseEntity.ok(mainService.saveDday(coupleName,dDay));
     }
-
-
 }
