@@ -85,19 +85,15 @@ public class DiaryService {
     //다이어리 조회 불러오기
     @Transactional
     public List<DiaryResDto> getDiariesByEmail(String email) {
-        log.debug("Fetching couple by email: {}", email);
         CoupleEntity couple = coupleRepository.findByFirstEmailOrSecondEmail(email, email)
                 .orElseThrow(() -> new RuntimeException("Couple not found"));
 
-        log.debug("Found couple: {}", couple);
         List<DiaryEntity> diaries = diaryRepository.findByCouple(couple);
 
-        log.debug("Found diaries: {}", diaries);
         return diaries.stream().map(diary -> {
             List<DiaryCheckListEntity.Event> events = diaryCheckListRepository.findByDiary(diary)
                     .map(DiaryCheckListEntity::getEvents).orElse(null);
 
-            log.debug("Found events: {}", events);
             return DiaryResDto.builder()
                     .email(diary.getEmail())
                     .anniversary(diary.getAnniversary())

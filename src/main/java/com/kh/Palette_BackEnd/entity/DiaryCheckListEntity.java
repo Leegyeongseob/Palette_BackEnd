@@ -18,7 +18,6 @@ public class DiaryCheckListEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="diaryCheckList_id")
     private Long id;
-    // 체크리스트 내용
 
     // 체크리스트 내용
     @ElementCollection
