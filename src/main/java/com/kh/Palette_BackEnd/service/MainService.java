@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +25,9 @@ import java.util.Optional;
 public class MainService {
     private final CoupleRepository coupleRepository;
     private final MemberRepository memberRepository;
+
+    @PersistenceContext
+    EntityManager em;
     // 커플이름으로 닉네임 불러오기
     public List<String> searchNickName(String email, String coupleName) {
         List<String> nickNames = new ArrayList<>();
@@ -34,28 +39,47 @@ public class MainService {
             String firstEmail = coupleEntity.getFirstEmail();
             String secondEmail = coupleEntity.getSecondEmail();
 
-            if (firstEmail.equals(email)) {
+            // firstEmail 처리
+            if (firstEmail != null && firstEmail.equals(email)) {
                 Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
-                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
                 memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
-                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
             }
-            if (secondEmail.equals(email)) {
+
+            // secondEmail 처리
+            if (secondEmail != null && secondEmail.equals(email)) {
                 Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
-                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
                 memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
-                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
             }
         }
         return nickNames;
     }
-    // 커플이름으로 Dday 존재 확인
-    public boolean isExistDday(String coupleName){
-       Optional<CoupleEntity> coupleEntityOpt  = coupleRepository.findByCoupleName(coupleName);
-       if(coupleEntityOpt.isPresent()){
-           CoupleEntity coupleEntity = coupleEntityOpt.get();
-           return coupleEntity.getDatingDay() !=null;
-       }
-       return false;
+    // 커플이름으로 D-day 찾기
+    public String searchDday(String coupleName) {
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        if (coupleEntityOpt.isPresent()) {
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            String datingDay = coupleEntity.getDDay();
+            if (datingDay != null) {
+                return datingDay;
+            } else {
+                return null;
+            }
+        } else {
+            throw new IllegalArgumentException("해당 커플 이름으로 정보를 찾을 수 없습니다: " + coupleName);
+        }
+    }
+    // D-day 저장
+    public boolean saveDday(String coupleName,String datingDay){
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        if(coupleEntityOpt.isPresent()){
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            coupleEntity.setDDay(datingDay);
+            coupleRepository.saveAndFlush(coupleEntity);
+            em.clear();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
