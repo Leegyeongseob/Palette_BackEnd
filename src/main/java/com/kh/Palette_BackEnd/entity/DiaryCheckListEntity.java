@@ -35,7 +35,8 @@ public class DiaryCheckListEntity {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Event {
-        private boolean isEvent;
+        @Column(name = "is_event")
+        private Boolean isEvent;
         private String eventText;
     }
 }

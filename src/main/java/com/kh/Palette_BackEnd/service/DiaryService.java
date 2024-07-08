@@ -32,28 +32,22 @@ public class DiaryService {
     @Autowired
     private CoupleRepository coupleRepository;
 
+    //다이어리 저장
     @Transactional
     public DiaryEntity saveDiary(DiaryReqDto diaryReqDto) {
         try {
-            // CoupleEntity 조회
             Optional<CoupleEntity> coupleOpt = coupleRepository.findByFirstEmailOrSecondEmail(diaryReqDto.getEmail(), diaryReqDto.getEmail());
             CoupleEntity couple = coupleOpt.orElseThrow(() -> new RuntimeException("Couple not found"));
-
-            // 날짜 파싱 및 변환
             LocalDate anniversary = diaryReqDto.getAnniversary();
 
-
-            // 동일 날짜의 DiaryEntity 조회
             Optional<DiaryEntity> existingDiaryOpt = diaryRepository.findByCoupleAndAnniversary(couple, anniversary);
 
             DiaryEntity diaryEntity;
             if (existingDiaryOpt.isPresent()) {
-                // 기존 데이터 업데이트
                 diaryEntity = existingDiaryOpt.get();
                 diaryEntity.setDateContents(diaryReqDto.getDateContents());
                 diaryEntity.setContents(diaryReqDto.getContents());
 
-                // 기존 DiaryCheckListEntity도 업데이트
                 Optional<DiaryCheckListEntity> existingCheckListOpt = diaryCheckListRepository.findByDiary(diaryEntity);
                 if (existingCheckListOpt.isPresent()) {
                     DiaryCheckListEntity diaryCheckListEntity = existingCheckListOpt.get();
@@ -66,7 +60,6 @@ public class DiaryService {
                     diaryCheckListRepository.save(diaryCheckListEntity);
                 }
             } else {
-                // 새로운 DiaryEntity 생성
                 diaryEntity = DiaryEntity.builder()
                         .email(diaryReqDto.getEmail())
                         .anniversary(anniversary)
@@ -74,11 +67,8 @@ public class DiaryService {
                         .contents(diaryReqDto.getContents())
                         .couple(couple)
                         .build();
-
-                // Diary 저장
                 diaryEntity = diaryRepository.save(diaryEntity);
 
-                // 새로운 DiaryCheckListEntity 생성 및 저장
                 DiaryCheckListEntity diaryCheckListEntity = new DiaryCheckListEntity();
                 diaryCheckListEntity.setEvents(diaryReqDto.getEvents());
                 diaryCheckListEntity.setDiary(diaryEntity);
@@ -92,6 +82,7 @@ public class DiaryService {
         }
     }
 
+    //다이어리 조회 불러오기
     @Transactional
     public List<DiaryResDto> getDiariesByEmail(String email) {
         log.debug("Fetching couple by email: {}", email);
@@ -117,6 +108,7 @@ public class DiaryService {
         }).collect(Collectors.toList());
     }
 
+    //다이어리 삭제
     @Transactional
     public void deleteDiaryByEmailAndDate(String email, LocalDate date) {
         CoupleEntity couple = coupleRepository.findByFirstEmailOrSecondEmail(email, email)
