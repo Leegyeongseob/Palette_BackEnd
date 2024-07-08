@@ -39,16 +39,31 @@ public class MainService {
             String firstEmail = coupleEntity.getFirstEmail();
             String secondEmail = coupleEntity.getSecondEmail();
 
-            // firstEmail 처리
-            if (firstEmail != null && firstEmail.equals(email)) {
+            // firstEmail만 값이 존재하는 경우 처리
+            if (firstEmail != null &&secondEmail ==null && firstEmail.equals(email)) {
                 Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
                 memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
             }
 
-            // secondEmail 처리
-            if (secondEmail != null && secondEmail.equals(email)) {
+            // secondEmail만 값이 존재하는 경우 처리
+            if (secondEmail != null && firstEmail == null && secondEmail.equals(email)) {
                 Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
                 memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+            }
+            // 값이 둘다 존재하고 firstEmail이 email과 같은 경우
+            if (firstEmail != null && secondEmail != null && firstEmail.equals(email)){
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+            }
+            // 값이 둘다 존재하고 secondEmail이 email과 같은 경우
+            if (firstEmail != null && secondEmail != null && secondEmail.equals(email)){
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+
             }
         }
         return nickNames;
