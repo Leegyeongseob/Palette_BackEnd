@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,6 +28,7 @@ public class ChatService {
     private final CoupleRepository coupleRepository;
     private final Map<String, WebSocketSession> userSessions = new ConcurrentHashMap<>();
 
+
     public void addUserSession(String userId, WebSocketSession session) {
         userSessions.put(userId, session);
         log.debug("New session added for user {}: {}", userId, session);
@@ -40,8 +39,8 @@ public class ChatService {
         log.debug("Session removed for user {}: {}", userId);
     }
 
-    public void sendMessageToUser(String senderId, String receiverId, ChatMessageDto message) {
-        WebSocketSession receiverSession = userSessions.get(receiverId);
+    public void sendMessageToUser(String sender, String receiver, ChatMessageDto message) {
+        WebSocketSession receiverSession = userSessions.get(receiver);
         if (receiverSession != null && receiverSession.isOpen()) {
             sendMessage(receiverSession, message);
         }
@@ -70,23 +69,33 @@ public class ChatService {
         }
     }
     public List<String> coupleEmail(String email) {
-        Optional<CoupleEntity> coupleEntity = coupleRepository.findByFirstEmail(email);
-        List<String> list = new ArrayList<>();
+        log.debug("받은 이메일: {}", email);
+        List<String> emailList = new ArrayList<>();
+        try {
+            Optional<CoupleEntity> coupleEntityOptional = coupleRepository.findByFirstEmailOrSecondEmail(email, email);
 
-        if (coupleEntity.isPresent()) {
-            // 만약 첫 번째 계정이 동일한 경우
-            if (email.equals(coupleEntity.get().getFirstEmail())) {
-                String secondEmail = coupleEntity.get().getSecondEmail();
-                list.add(email);
-                list.add(secondEmail);
-            } else { // 두 번째 계정이 동일한 경우
-                String firstEmail = coupleEntity.get().getFirstEmail();
-                list.add(email);
-                list.add(firstEmail);
+            coupleEntityOptional.ifPresent(coupleEntity -> {
+                String firstEmail = coupleEntity.getFirstEmail();
+                String secondEmail = coupleEntity.getSecondEmail();
+                log.debug("커플 엔터티 발견: {}, {}", firstEmail, secondEmail);
+
+                if (email.equals(firstEmail)) {
+                    emailList.add(firstEmail);
+                    emailList.add(secondEmail);
+                } else if (email.equals(secondEmail)) {
+                    emailList.add(secondEmail);
+                    emailList.add(firstEmail);
+                }
+            });
+
+            if (!coupleEntityOptional.isPresent()) {
+                log.debug("이메일에 해당하는 커플 엔터티를 찾을 수 없음: {}", email);
             }
-            return list;
+        } catch (Exception e) {
+            log.error("커플 이메일 가져오는 중 오류 발생", e);
         }
-
-        return list; // 커플 정보가 없으면 빈 리스트 반환
+        return emailList;
     }
+
+
 }

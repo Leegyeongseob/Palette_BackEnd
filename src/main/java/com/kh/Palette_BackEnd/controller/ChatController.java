@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,9 +29,5 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChatMessages(sender, receiver));
     }
 
-    //커플이름 뽑아오기
-    @PostMapping("/coupleEmail")
-    public ResponseEntity<List<String>> coupleEmail(@RequestBody Map<String,String> email) {
-        return ResponseEntity.ok(chatService.coupleEmail(email.get("email")));
-    }
+
 }
