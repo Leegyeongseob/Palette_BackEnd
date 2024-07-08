@@ -19,7 +19,7 @@ public class BoardEntity {
     @Column(name="board_id")
     private Long id;
 
-    private String Title;
+    private String title;
     // 작성 날짜, 시간
     private LocalDateTime RegDate;
     // 게시물 사진
