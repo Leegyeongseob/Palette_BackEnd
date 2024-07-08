@@ -26,7 +26,7 @@ public class CoupleEntity {
     @Column(unique = true,nullable = false)
     private String coupleName;
 
-    private Date datingDay;
+    private String dDay;
 
     @OneToMany(mappedBy = "couple", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

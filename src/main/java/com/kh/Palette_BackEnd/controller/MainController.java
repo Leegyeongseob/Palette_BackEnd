@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,10 +20,15 @@ public class MainController {
     public ResponseEntity<List<String>> searchNickName(@RequestParam String email,@RequestParam String coupleName){
         return ResponseEntity.ok(mainService.searchNickName(email,coupleName));
     }
-    //커플이름으로 Dday존재 확인
-    @GetMapping("/isExistDday")
-    public ResponseEntity<Boolean> isExistDday(@RequestParam String coupleName){
-        return ResponseEntity.ok(mainService.isExistDday(coupleName));
-    }
+    //커플이름으로 Dday 잧기
+    @GetMapping("/searchDday")
+    public ResponseEntity<String> searchDday(@RequestParam String coupleName){
+        return ResponseEntity.ok(mainService.searchDday(coupleName));
 
+    }
+    //Dday 저장
+    @GetMapping("/saveDday")
+    public ResponseEntity<Boolean> saveDday(@RequestParam String coupleName, @RequestParam String dDay){
+        return ResponseEntity.ok(mainService.saveDday(coupleName,dDay));
+    }
 }

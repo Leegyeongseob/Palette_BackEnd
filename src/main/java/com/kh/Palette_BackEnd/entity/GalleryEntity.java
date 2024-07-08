@@ -33,4 +33,11 @@ public class GalleryEntity {
     @JoinColumn(name = "couple_id")
     private CoupleEntity couple;
 
+<<<<<<< HEAD
+=======
+    // 사진 올리는 계정 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
+    private MemberEntity member;
+>>>>>>> 57adf12d53a423495fd6398ce197bda9f78b234b
 }
