@@ -18,8 +18,8 @@ public class MainController {
     private final MainService mainService;
     //커플이름으로 닉네임 찾기
     @GetMapping("/searchNickName")
-    public ResponseEntity<List<String>> searchNickName(@RequestParam String coupleName){
-        return ResponseEntity.ok(mainService.searchNickName(coupleName));
+    public ResponseEntity<List<String>> searchNickName(@RequestParam String email,@RequestParam String coupleName){
+        return ResponseEntity.ok(mainService.searchNickName(email,coupleName));
     }
     //커플이름으로 Dday존재 확인
     @GetMapping("/isExistDday")

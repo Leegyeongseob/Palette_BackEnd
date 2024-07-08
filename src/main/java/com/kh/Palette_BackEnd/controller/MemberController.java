@@ -35,4 +35,14 @@ public class MemberController {
     public ResponseEntity<String> memberDelete(@RequestBody Map<String,String> email){
         return ResponseEntity.ok(memberService.memberDelete(email.get("email")));
     }
+    //커플이름 뽑아오기
+    @PostMapping("/coupleNameSearch")
+    public ResponseEntity<String> coupleNameSearch(@RequestBody Map<String,String> email){
+        return ResponseEntity.ok(memberService.coupleNameSearch(email.get("email")));
+    }
+    //커플이름으로
+    @PostMapping("/isCoupleTrue")
+    public ResponseEntity<Boolean> isCoupleTrue(@RequestBody Map<String,String> coupleName){
+        return ResponseEntity.ok(memberService.isCoupleTrue(coupleName.get("coupleName")));
+    }
 }

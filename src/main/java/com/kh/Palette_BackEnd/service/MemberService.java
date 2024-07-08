@@ -1,7 +1,6 @@
 package com.kh.Palette_BackEnd.service;
 
 
-import com.kh.Palette_BackEnd.dto.reqdto.MemberReqDto;
 import com.kh.Palette_BackEnd.dto.reqdto.MemberUpdateReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.MemberResDto;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
@@ -15,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -118,5 +118,29 @@ public class MemberService {
             return "회원 정보 삭제 중 오류가 발생했습니다.: " + e.getMessage();
         }
     }
+    // 커플이름 search
+    public String coupleNameSearch(String email){
+        Optional<CoupleEntity> coupleEntity = coupleRepository.findByFirstEmailOrSecondEmail(email,email);
+        if(coupleEntity.isPresent()){
+            return coupleEntity.get().getCoupleName();
+        }
+        else {
+            // 커플을 찾지 못한 경우 예외를 던집니다.
+            throw new EntityNotFoundException("해당 이메일로 커플을 찾을 수 없습니다: " + email);
+        }
+    }
+    // 커플 이름으로 솔로인지 커플인지 확인
+    public boolean isCoupleTrue(String coupleName) {
+        Optional<CoupleEntity> coupleEntity = coupleRepository.findByCoupleName(coupleName);
 
+        if (coupleEntity.isPresent()) {
+            CoupleEntity entity = coupleEntity.get();
+            String firstEmail = entity.getFirstEmail();
+            String secondEmail = entity.getSecondEmail();
+
+            return firstEmail != null && !firstEmail.isEmpty() && secondEmail != null && !secondEmail.isEmpty();
+        } else {
+            throw new EntityNotFoundException("해당 커플 이름으로 정보를 찾을 수 없습니다: " + coupleName);
+        }
+    }
 }

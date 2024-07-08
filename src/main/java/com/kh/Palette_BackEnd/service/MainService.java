@@ -24,40 +24,30 @@ public class MainService {
     private final CoupleRepository coupleRepository;
     private final MemberRepository memberRepository;
     // 커플이름으로 닉네임 불러오기
-    public List<String> searchNickName(String coupleName){
-        // 커플 엔터티를 커플 이름으로 찾기
-        Optional<CoupleEntity> coupleEntity = coupleRepository.findByCoupleName(coupleName);
-        if (coupleEntity.isEmpty()) {
-            log.warn("Couple with name {} not found", coupleName);
-            return new ArrayList<>(); // 빈 리스트 반환 혹은 예외 처리 로직 추가
-        }
+    public List<String> searchNickName(String email, String coupleName) {
+        List<String> nickNames = new ArrayList<>();
 
-        // 첫 번째 이메일로 멤버 엔터티 찾기
-        Optional<MemberEntity> firstEmail = memberRepository.findByEmail(coupleEntity.get().getFirstEmail());
-        if (firstEmail.isEmpty()) {
-            log.warn("First email {} for couple {} not found", coupleEntity.get().getFirstEmail(), coupleName);
-            return new ArrayList<>(); // 빈 리스트 반환 혹은 예외 처리 로직 추가
-        }
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
 
-        // 두 번째 이메일로 멤버 엔터티 찾기
-        String secondEmailStr = coupleEntity.get().getSecondEmail();
-        Optional<MemberEntity> secondEmail = Optional.empty();
-        if (secondEmailStr != null) {
-            secondEmail = memberRepository.findByEmail(secondEmailStr);
-            if (secondEmail.isEmpty()) {
-                log.warn("Second email {} for couple {} not found", secondEmailStr, coupleName);
+        if (coupleEntityOpt.isPresent()) {
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            String firstEmail = coupleEntity.getFirstEmail();
+            String secondEmail = coupleEntity.getSecondEmail();
+
+            if (firstEmail.equals(email)) {
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+            }
+            if (secondEmail.equals(email)) {
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
             }
         }
-
-        List<String> list = new ArrayList<>();
-        list.add(firstEmail.get().getNickName());
-        if (secondEmail.isPresent()) {
-            list.add(secondEmail.get().getNickName());
-        } else {
-            log.info("Second email is null or not found for couple {}", coupleName);
-        }
-
-        return list;
+        return nickNames;
     }
     // 커플이름으로 Dday 존재 확인
     public boolean isExistDday(String coupleName){
