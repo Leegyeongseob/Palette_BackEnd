@@ -14,7 +14,9 @@ public class DateCourseResDto {
     private Long id;
     private String title;
     private LocalDate date;
+    private String coupleName; // 커플 이름 추가
     private List<PlaceDTO> places;
+
 
     @Data
     public static class PlaceDTO {

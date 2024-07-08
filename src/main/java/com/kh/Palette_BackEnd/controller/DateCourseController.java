@@ -40,6 +40,7 @@ public class DateCourseController {
     // 새로운 코스 생성 API
     @PostMapping
     public ResponseEntity<DateCourseResDto> createCourse(@RequestBody  DateCourseReqDto reqCourseDTO) {
+        log.info("Received request to create course with data: {}", reqCourseDTO);
         DateCourseResDto createdCourse = dateCourseService.createCourse(reqCourseDTO);
         return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
     }
@@ -59,5 +60,11 @@ public class DateCourseController {
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         dateCourseService.deleteCourse(id);
         return ResponseEntity.noContent().build();
+    }
+    // 커플 이름으로 코스 목록 조회 API
+    @GetMapping("/search/{coupleName}")
+    public ResponseEntity<List<DateCourseResDto>> getCoursesByCoupleName(@PathVariable String coupleName) {
+        List<DateCourseResDto> courses = dateCourseService.getCoursesByCoupleName(coupleName);
+        return ResponseEntity.ok(courses);
     }
 }

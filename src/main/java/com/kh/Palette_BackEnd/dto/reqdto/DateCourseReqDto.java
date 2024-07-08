@@ -12,6 +12,7 @@ import java.util.List;
 public class DateCourseReqDto {
     private String title;
     private List<PlaceDTO> places;
+    private String coupleName;
 
     @Data
     public static class PlaceDTO {

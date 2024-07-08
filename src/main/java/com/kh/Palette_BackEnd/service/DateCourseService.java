@@ -2,10 +2,13 @@ package com.kh.Palette_BackEnd.service;
 
 import com.kh.Palette_BackEnd.dto.reqdto.DateCourseReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.DateCourseResDto;
+import com.kh.Palette_BackEnd.entity.CoupleEntity;
 import com.kh.Palette_BackEnd.entity.DateCourseEntity;
 import com.kh.Palette_BackEnd.entity.PlaceEntity;
+import com.kh.Palette_BackEnd.repository.CoupleRepository;
 import com.kh.Palette_BackEnd.repository.DateCourseRepository;
 import com.kh.Palette_BackEnd.repository.PlaceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class DateCourseService {
     @Autowired
     private DateCourseRepository dateCourseRepository;
@@ -22,28 +26,34 @@ public class DateCourseService {
     @Autowired
     private PlaceRepository placeRepository;
 
+    @Autowired
+    private CoupleRepository coupleRepository;
+
     // 코스와 장소를 생성하고 저장하는 메소드
     @Transactional
     public DateCourseResDto createCourse(DateCourseReqDto reqCourseDTO) {
-        DateCourseEntity dateCourseEntity = new DateCourseEntity();
-        dateCourseEntity.setTitle(reqCourseDTO.getTitle());
-        DateCourseEntity savedCourse = dateCourseRepository.save(dateCourseEntity);
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(reqCourseDTO.getCoupleName());
+            CoupleEntity couple = coupleEntityOpt.get();
+            DateCourseEntity dateCourseEntity = new DateCourseEntity();
+            dateCourseEntity.setTitle(reqCourseDTO.getTitle());
+            dateCourseEntity.setCouple(couple);
+            DateCourseEntity savedCourse = dateCourseRepository.save(dateCourseEntity);
 
-        int order = 1;
-        for (DateCourseReqDto.PlaceDTO placeDTO : reqCourseDTO.getPlaces()) {
-            PlaceEntity placeEntity = new PlaceEntity();
-            placeEntity.setPlace_name(placeDTO.getPlace_name());
-            placeEntity.setRoad_address_name(placeDTO.getRoad_address_name());
-            placeEntity.setPhone(placeDTO.getPhone());
-            placeEntity.setPlace_url(placeDTO.getPlace_url());
-            placeEntity.setX(placeDTO.getX());
-            placeEntity.setY(placeDTO.getY());
-            placeEntity.setDateCourse(savedCourse);
-            placeEntity.setPlaceOrder(order++);
-            placeRepository.save(placeEntity);
-        }
+            int order = 1;
+            for (DateCourseReqDto.PlaceDTO placeDTO : reqCourseDTO.getPlaces()) {
+                PlaceEntity placeEntity = new PlaceEntity();
+                placeEntity.setPlace_name(placeDTO.getPlace_name());
+                placeEntity.setRoad_address_name(placeDTO.getRoad_address_name());
+                placeEntity.setPhone(placeDTO.getPhone());
+                placeEntity.setPlace_url(placeDTO.getPlace_url());
+                placeEntity.setX(placeDTO.getX());
+                placeEntity.setY(placeDTO.getY());
+                placeEntity.setDateCourse(savedCourse);
+                placeEntity.setPlaceOrder(order++);
+                placeRepository.save(placeEntity);
+            }
+            return convertToResCourseDTO(savedCourse);
 
-        return convertToResCourseDTO(savedCourse);
     }
 
     // 모든 코스를 조회하는 메소드
@@ -102,6 +112,7 @@ public class DateCourseService {
         resCourseDTO.setId(dateCourseEntity.getId());
         resCourseDTO.setTitle(dateCourseEntity.getTitle());
         resCourseDTO.setDate(dateCourseEntity.getDate());
+        resCourseDTO.setCoupleName(dateCourseEntity.getCouple().getCoupleName());
         resCourseDTO.setPlaces(dateCourseEntity.getPlaces().stream()
                 .map(this::convertToPlaceDTO)
                 .collect(Collectors.toList()));
@@ -121,4 +132,14 @@ public class DateCourseService {
         placeDTO.setPlaceOrder(placeEntity.getPlaceOrder());
         return placeDTO;
     }
+
+    // 커플 이름으로 코스 목록 조회
+    public List<DateCourseResDto> getCoursesByCoupleName(String coupleName) {
+        List<DateCourseEntity> courses = dateCourseRepository.findByCouple_CoupleName(coupleName);
+        return courses.stream()
+                .map(this::convertToResCourseDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }
