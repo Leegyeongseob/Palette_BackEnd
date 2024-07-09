@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -41,18 +42,20 @@ public class GalleryService {
                     .build();
             galleryEntity = galleryRepository.save(galleryEntity);
 
-            for (String url : galleryReqDto.getUrls()) {
-                GalleryListEntity galleryListEntity = new GalleryListEntity();
-                galleryListEntity.setImgUrl(url);
-                galleryListEntity.setGallery(galleryEntity);
-                galleryListRepository.save(galleryListEntity);
-            }
+            // URL이 단일 값으로 변경됨
+            String url = galleryReqDto.getUrls(); // 단일 URL 가져오기
+            GalleryListEntity galleryListEntity = new GalleryListEntity();
+            galleryListEntity.setImgUrl(url);
+            galleryListEntity.setGallery(galleryEntity);
+            galleryListRepository.save(galleryListEntity);
+
             return galleryEntity;
         } catch (Exception e) {
             log.error("Failed to save diary: {}", e.getMessage());
             throw new RuntimeException("Failed to save gallery", e);
         }
     }
+
 
     // 갤러리 조회
     @Transactional
@@ -74,8 +77,22 @@ public class GalleryService {
                     .build();
         }).collect(Collectors.toList());
     }
+    //다이어리 삭제
+    @Transactional
+    public void deleteGalleryByEmailAndImgUrl(String email, String imgUrl) {
+        CoupleEntity couple = coupleRepository.findByFirstEmailOrSecondEmail(email, email)
+                .orElseThrow(() -> new RuntimeException("Couple not found"));
 
+        GalleryEntity gallery = galleryRepository.findByCouple(couple)
+                .stream()
+                .filter(g -> galleryListRepository.findByGalleryAndImgUrl(g, imgUrl).isPresent())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Gallery not found"));
 
+        galleryListRepository.deleteByGalleryAndImgUrl(gallery, imgUrl);
 
-
+        if (!galleryListRepository.existsByGallery(gallery)) {
+            galleryRepository.delete(gallery);
+        }
+    }
 }

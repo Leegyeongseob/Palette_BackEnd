@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class GalleryReqDto {
     private String email;
-    private List<String> urls;
+    private String urls;
 }

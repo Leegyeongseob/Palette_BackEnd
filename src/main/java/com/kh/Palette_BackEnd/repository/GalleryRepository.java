@@ -2,6 +2,7 @@ package com.kh.Palette_BackEnd.repository;
 
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
 import com.kh.Palette_BackEnd.entity.GalleryEntity;
+import com.kh.Palette_BackEnd.entity.GalleryListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
