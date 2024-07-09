@@ -7,11 +7,9 @@ import com.kh.Palette_BackEnd.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -44,5 +42,15 @@ public class MemberController {
     @PostMapping("/isCoupleTrue")
     public ResponseEntity<Boolean> isCoupleTrue(@RequestBody Map<String,String> coupleName){
         return ResponseEntity.ok(memberService.isCoupleTrue(coupleName.get("coupleName")));
+    }
+    //프로필url 저장 Axios
+    @GetMapping("/profileUrlSave")
+    public ResponseEntity<Boolean> profileUrlSave(@RequestParam String email,@RequestParam String url){
+        return ResponseEntity.ok(memberService.profileUrlSave(email,url));
+    }
+    //커플 프로필 url을 가져오는 Axios
+    @GetMapping("coupleProfileUrl")
+    public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String email){
+        return ResponseEntity.ok(memberService.coupleProfileUrl(email));
     }
 }
