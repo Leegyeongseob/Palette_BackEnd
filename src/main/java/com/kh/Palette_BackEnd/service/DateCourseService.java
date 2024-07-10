@@ -135,6 +135,7 @@ public class DateCourseService {
 
     // 커플 이름으로 코스 목록 조회
     public List<DateCourseResDto> getCoursesByCoupleName(String coupleName) {
+        System.out.println("커플 네임 서비스 : " + coupleName);
         List<DateCourseEntity> courses = dateCourseRepository.findByCouple_CoupleName(coupleName);
         return courses.stream()
                 .map(this::convertToResCourseDTO)

@@ -64,6 +64,7 @@ public class DateCourseController {
     // 커플 이름으로 코스 목록 조회 API
     @GetMapping("/search/{coupleName}")
     public ResponseEntity<List<DateCourseResDto>> getCoursesByCoupleName(@PathVariable String coupleName) {
+        System.out.println("커플 네임 컨트롤러 : " + coupleName);
         List<DateCourseResDto> courses = dateCourseService.getCoursesByCoupleName(coupleName);
         return ResponseEntity.ok(courses);
     }

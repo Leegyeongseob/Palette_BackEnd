@@ -159,44 +159,66 @@ public class MemberService {
         }
     }
     // 커플 프로필 url을 가져오는 Axios
-    public List<String> coupleProfileUrl(String email) {
+    public List<String> coupleProfileUrl( String coupleName, String email) {
         List<String> list = new ArrayList<>();
 
-        // 첫 번째 이메일로 커플 검색
-        Optional<CoupleEntity> coupleEntityOpt1 = coupleRepository.findByFirstEmail(email);
-        if (coupleEntityOpt1.isPresent()) {
-            CoupleEntity couple = coupleEntityOpt1.get();
-            // 첫 번째 이메일이 존재하고 두 번째 이메일도 존재할 경우
-            if (couple.getSecondEmail() != null) {
-                Optional<MemberEntity> memberEntity1 = memberRepository.findByEmail(couple.getFirstEmail());
-                Optional<MemberEntity> memberEntity2 = memberRepository.findByEmail(couple.getSecondEmail());
-                list.add(memberEntity1.get().getProfileImgUrl());
-                list.add(memberEntity2.get().getProfileImgUrl());
-            } else {
-                // 첫 번째 이메일만 존재할 경우
-                Optional<MemberEntity> memberEntity1 = memberRepository.findByEmail(couple.getFirstEmail());
-                list.add(memberEntity1.get().getProfileImgUrl());
+        // 커플 이름으로 커플 검색
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        if (coupleEntityOpt.isPresent()) {
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            String firstEmail = coupleEntity.getFirstEmail();
+            String secondEmail = coupleEntity.getSecondEmail();
+
+            // firstEmail만 값이 존재하는 경우 처리
+            if (firstEmail != null &&secondEmail ==null && firstEmail.equals(email)) {
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                memberFirstEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+            }
+
+            // secondEmail만 값이 존재하는 경우 처리
+            if (secondEmail != null && firstEmail == null && secondEmail.equals(email)) {
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberSecondEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+            }
+
+            // 값이 둘다 존재하고 firstEmail이 email과 같은 경우
+            if (firstEmail != null && secondEmail != null && firstEmail.equals(email)){
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberFirstEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+                memberSecondEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+            }
+            // 값이 둘다 존재하고 secondEmail이 email과 같은 경우
+            if (firstEmail != null && secondEmail != null && secondEmail.equals(email)){
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberSecondEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+                memberFirstEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+
+            }
+
+
+
+
+
+
+
+
+
+            // 주어진 이메일이 커플의 firstEmail 또는 secondEmail과 일치하지 않는 경우
+            if (!email.equals(firstEmail) && !email.equals(secondEmail)) {
+                // firstEmail에 해당하는 멤버의 프로필 이미지 URL 가져오기
+                Optional<MemberEntity> memberEntity1 = memberRepository.findByEmail(firstEmail);
+                memberEntity1.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
+
+                // secondEmail에 해당하는 멤버의 프로필 이미지 URL 가져오기
+                Optional<MemberEntity> memberEntity2 = memberRepository.findByEmail(secondEmail);
+                memberEntity2.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
             }
             return list;
         }
 
-        // 두 번째 이메일로 커플 검색
-        Optional<CoupleEntity> coupleEntityOpt2 = coupleRepository.findBySecondEmail(email);
-        if (coupleEntityOpt2.isPresent()) {
-            CoupleEntity couple = coupleEntityOpt2.get();
-            // 두 번째 이메일이 존재하고 첫 번째 이메일도 존재할 경우
-            if (couple.getFirstEmail() != null) {
-                Optional<MemberEntity> memberEntity1 = memberRepository.findByEmail(couple.getFirstEmail());
-                Optional<MemberEntity> memberEntity2 = memberRepository.findByEmail(couple.getSecondEmail());
-                list.add(memberEntity2.get().getProfileImgUrl());
-                list.add(memberEntity1.get().getProfileImgUrl());
-            } else {
-                // 두 번째 이메일만 존재할 경우
-                Optional<MemberEntity> memberEntity2 = memberRepository.findByEmail(couple.getSecondEmail());
-                list.add(memberEntity2.get().getProfileImgUrl());
-            }
-            return list;
-        }
+
 
         // 커플 정보가 없을 경우 빈 리스트 반환
         return list;

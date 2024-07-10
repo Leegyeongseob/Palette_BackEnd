@@ -50,6 +50,7 @@ public class MainService {
                 Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
                 memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
             }
+
             // 값이 둘다 존재하고 firstEmail이 email과 같은 경우
             if (firstEmail != null && secondEmail != null && firstEmail.equals(email)){
                 Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
@@ -65,6 +66,15 @@ public class MainService {
                 memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
 
             }
+            // 일치하는 email이 존재 하지 않을 경우
+            if (!firstEmail.equals(email)&&!secondEmail.equals(email)){
+                Optional<MemberEntity> memberFirstEntityOpt = memberRepository.findByEmail(firstEmail);
+                Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
+                memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+                memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
+
+            }
+
         }
         return nickNames;
     }

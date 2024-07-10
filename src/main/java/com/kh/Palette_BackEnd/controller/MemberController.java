@@ -50,7 +50,7 @@ public class MemberController {
     }
     //커플 프로필 url을 가져오는 Axios
     @GetMapping("coupleProfileUrl")
-    public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String email){
-        return ResponseEntity.ok(memberService.coupleProfileUrl(email));
+    public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String coupleName,@RequestParam String email){
+        return ResponseEntity.ok(memberService.coupleProfileUrl(coupleName, email));
     }
 }
