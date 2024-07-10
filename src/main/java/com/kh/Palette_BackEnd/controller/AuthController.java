@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://couple-palette.kro.kr:3000")
 public class AuthController {
     private final AuthService authService;
     //아이디 중복 확인
