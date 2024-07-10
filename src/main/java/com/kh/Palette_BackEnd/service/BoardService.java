@@ -9,6 +9,8 @@ import com.kh.Palette_BackEnd.repository.BoardRepository;
 import com.kh.Palette_BackEnd.repository.MemberRepository;
 import com.kh.Palette_BackEnd.repository.BoardListRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +24,8 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final BoardListRepository boardListRepository;
 
-    public List<BoardResDto> getAllBoards() {
-        return boardRepository.findAll().stream()
-                .map(this::convertToResDto)
-                .collect(Collectors.toList());
+    public Page<BoardResDto> getAllBoards(Pageable pageable) {
+        return boardRepository.findAll(pageable).map(this::convertToResDto);
     }
 
     public BoardResDto getBoardById(Long id) {
