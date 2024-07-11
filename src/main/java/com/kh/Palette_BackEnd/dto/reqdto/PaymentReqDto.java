@@ -11,17 +11,8 @@ public class PaymentReqDto {
     private String paymentId;
     private String orderName;
     private int totalAmount;
-    private Customer customer;
-
-    // getters 및 setters
-
-    @Getter
-    @Setter
-    public static class Customer {
-        private String fullName;
-        private String phoneNumber;
-        private String email;
-
-        // getters 및 setters
-    }
+    private String customerName;
+    private String customerPhone;
+    private String customerEmail;
+    private String status;
 }
