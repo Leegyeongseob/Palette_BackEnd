@@ -28,4 +28,10 @@ public class MemberResDto {
                 .nickName(member.getNickName())
                 .build();
     }
+
+    public static MemberResDto fromMemberEntity(MemberEntity member){
+        return MemberResDto.builder()
+                .name(member.getName())
+                .build();
+    }
 }

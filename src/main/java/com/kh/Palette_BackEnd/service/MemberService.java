@@ -223,4 +223,15 @@ public class MemberService {
         // 커플 정보가 없을 경우 빈 리스트 반환
         return list;
     }
+
+    // 앨범 결제시 이메일로 이름 가져오기
+    public MemberResDto albumCustomer(String email) {
+        Optional<MemberEntity> memberEntityOpt = memberRepository.findByEmail(email);
+        if (memberEntityOpt.isPresent()) {
+            MemberEntity memberEntity = memberEntityOpt.get();
+            return MemberResDto.fromMemberEntity(memberEntity);
+        } else {
+            throw new IllegalArgumentException("해당 이메일로 사용자를 찾을 수 없습니다: " + email);
+        }
+    }
 }

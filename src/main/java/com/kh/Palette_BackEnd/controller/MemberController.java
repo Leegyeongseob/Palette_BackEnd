@@ -3,6 +3,7 @@ package com.kh.Palette_BackEnd.controller;
 
 import com.kh.Palette_BackEnd.dto.reqdto.MemberUpdateReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.MemberResDto;
+import com.kh.Palette_BackEnd.resdto.GalleryResDto;
 import com.kh.Palette_BackEnd.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,4 +54,16 @@ public class MemberController {
     public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String coupleName,@RequestParam String email){
         return ResponseEntity.ok(memberService.coupleProfileUrl(coupleName, email));
     }
+
+    //이메일로 이름 가져오기
+    @GetMapping("/customer")
+    public ResponseEntity<String> albumCustomer(@RequestParam String email) {
+        try {
+            String userName = memberService.albumCustomer(email).getName(); // 이름만 추출
+            return ResponseEntity.ok(userName);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to fetch user name: " + e.getMessage());
+        }
+    }
+
 }
