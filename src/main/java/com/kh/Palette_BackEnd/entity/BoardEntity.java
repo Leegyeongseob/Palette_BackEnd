@@ -20,26 +20,25 @@ public class BoardEntity {
     private Long id;
 
     private String title;
-    // 작성 날짜, 시간
-    private LocalDateTime RegDate;
-    // 게시물 사진
+
+    private LocalDateTime regDate;
+
     private String imgUrl;
-    // 내용
+
     private String contents;
 
-    //작성자를 불러오기 위한 조인
+    // 작성자를 불러오기 위한 조인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="email")
+    @JoinColumn(name ="member_email", referencedColumnName = "email")
     private MemberEntity member;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="boardList_id")
     private BoardListEntity boardList;
 
-    // DB에 값을 저장할때 시간 값 저장.
+    // DB에 값을 저장할 때 시간 값 저장.
     @PrePersist
     public void prePersist(){
-        RegDate = LocalDateTime.now();
+        regDate = LocalDateTime.now();
     }
 }
