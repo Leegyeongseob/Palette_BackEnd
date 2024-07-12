@@ -30,8 +30,8 @@ public class PaymentController {
 //    }
 
     @PostMapping("/complete")
-    public ResponseEntity<String> completePayment(@RequestBody PaymentReqDto paymentReqDto) {
-        PaymentEntity paymentEntity = paymentService.savePayment(paymentReqDto);
-        return ResponseEntity.ok("Payment data saved successfully.");
+    public ResponseEntity<Integer> completePayment(@RequestBody PaymentReqDto paymentReqDto) {
+        int total_price = paymentService.savePayment(paymentReqDto);
+        return ResponseEntity.ok(total_price);
     }
 }

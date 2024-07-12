@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -24,16 +26,32 @@ public class PaymentService {
 
     @Autowired
     private PaymentRepository paymentRepository;
+    @PersistenceContext
+    EntityManager em;
 
-    public PaymentEntity savePayment(PaymentReqDto paymentRequestDto) {
-        PaymentEntity payment = new PaymentEntity();
-        payment.setPaymentId(paymentRequestDto.getPaymentId());
-        payment.setOrderName(paymentRequestDto.getOrderName());
-        payment.setTotalAmount(paymentRequestDto.getTotalAmount());
-        payment.setCustomerName(paymentRequestDto.getCustomerName());
-        payment.setCustomerPhone(paymentRequestDto.getCustomerPhone());
-        payment.setCustomerEmail(paymentRequestDto.getCustomerEmail());
-        payment.setStatus(paymentRequestDto.getStatus());
-        return paymentRepository.save(payment);
+    public int savePayment(PaymentReqDto paymentRequestDto) {
+        Optional<PaymentEntity> paymentEntityOpt = paymentRepository.findbyCustomerEmail(paymentRequestDto.getCustomerEmail());
+        if(paymentEntityOpt.isPresent())
+        {
+            PaymentEntity paymentEntity = paymentEntityOpt.get();
+            paymentEntity.setTotalAmount(paymentEntity.getTotalAmount() + paymentRequestDto.getTotalAmount());
+            paymentRepository.saveAndFlush(paymentEntity);
+            em.clear();
+            return paymentEntity.getTotalAmount();
+        }
+        else{
+            PaymentEntity payment = new PaymentEntity();
+            payment.setPaymentId(paymentRequestDto.getPaymentId());
+            payment.setOrderName(paymentRequestDto.getOrderName());
+            payment.setTotalAmount(paymentRequestDto.getTotalAmount());
+            payment.setCustomerName(paymentRequestDto.getCustomerName());
+            payment.setCustomerPhone(paymentRequestDto.getCustomerPhone());
+            payment.setCustomerEmail(paymentRequestDto.getCustomerEmail());
+            payment.setStatus(paymentRequestDto.getStatus());
+            paymentRepository.saveAndFlush(payment);
+            em.clear();
+            return payment.getTotalAmount();
+        }
+
     }
 }
