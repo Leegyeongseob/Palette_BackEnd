@@ -121,10 +121,11 @@ public class MemberService {
         }
     }
     // 커플이름 search
-    public String coupleNameSearch(String email){
-        Optional<CoupleEntity> coupleEntity = coupleRepository.findByFirstEmailOrSecondEmail(email,email);
-        if(coupleEntity.isPresent()){
-            return coupleEntity.get().getCoupleName();
+    public String renderCoupleNameSearch(String email){
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByFirstEmailOrSecondEmail(email,email);
+        if(coupleEntityOpt.isPresent()){
+            log.info(coupleEntityOpt.get().getCoupleName());
+            return coupleEntityOpt.get().getCoupleName();
         }
         else {
             // 커플을 찾지 못한 경우 예외를 던집니다.
@@ -208,9 +209,6 @@ public class MemberService {
             }
             return list;
         }
-
-
-
         // 커플 정보가 없을 경우 빈 리스트 반환
         return list;
     }
@@ -227,11 +225,21 @@ public class MemberService {
     }
     public String firstEmailGet(String coupleName){
         Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        // 커플 테이블에 존재하면
         if(coupleEntityOpt.isPresent()){
-            return coupleEntityOpt.get().getFirstEmail();
+            // 첫번째 이메일에 있으면
+            if(coupleEntityOpt.get().getFirstEmail() !=null) {
+
+                return coupleEntityOpt.get().getFirstEmail();
+            }
+            // 두번째 이메일에 있으면
+            else{
+                return coupleEntityOpt.get().getSecondEmail();
+            }
         }
+        // 존재하지 않으면
         else{
-            throw new RuntimeException("BD에 해당 커플이 존재하지 않습니다.");
+            return "Db에 존재하지 않습니다.";
         }
     }
 }

@@ -16,7 +16,6 @@ public interface CoupleRepository extends JpaRepository<CoupleEntity,Long> {
     Optional<CoupleEntity> findByFirstEmail(String Email);
     Optional<CoupleEntity> findBySecondEmail(String Email);
     Optional<CoupleEntity> findByFirstEmailOrSecondEmail(String firstEmail, String secondEmail);
-
     Optional<List<CoupleEntity>> findByCoupleNameContaining(String coupleName);
 
 //    boolean existByDatingDay(String coupleName);
