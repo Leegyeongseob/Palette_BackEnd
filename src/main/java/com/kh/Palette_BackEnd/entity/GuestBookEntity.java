@@ -19,12 +19,16 @@ public class GuestBookEntity {
     @Column(name="guestBook_id")
     private Long id;
 
-    private String Title;
+    private String title;
     // 작성 날짜, 시간
     private LocalDateTime RegDate;
     // 내용
     private String contents;
 
+    // 방명록이 속한 커플
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="couple_id")
+    private CoupleEntity couple;
 
     //작성자를 불러오기 위한 조인
     @OneToOne(fetch = FetchType.LAZY)
