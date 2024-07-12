@@ -23,4 +23,9 @@ public class PaymentEntity {
     private String customerPhone;
     private String customerEmail;
     private String status;
+
+    // 커플모두 볼수 있어야함. 저장 데이터 불러오기
+    @ManyToOne
+    @JoinColumn(name = "couple_id")
+    private CoupleEntity couple;
 }
