@@ -44,12 +44,12 @@ public class MemberController {
     public ResponseEntity<Boolean> isCoupleTrue(@RequestBody Map<String,String> coupleName){
         return ResponseEntity.ok(memberService.isCoupleTrue(coupleName.get("coupleName")));
     }
-    //프로필url 저장 Axios
+    //프로필url 저장
     @GetMapping("/profileUrlSave")
     public ResponseEntity<Boolean> profileUrlSave(@RequestParam String email,@RequestParam String url){
         return ResponseEntity.ok(memberService.profileUrlSave(email,url));
     }
-    //커플 프로필 url을 가져오는 Axios
+    //커플 프로필 url을 가져오기
     @GetMapping("coupleProfileUrl")
     public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String coupleName,@RequestParam String email){
         return ResponseEntity.ok(memberService.coupleProfileUrl(coupleName, email));
@@ -65,5 +65,16 @@ public class MemberController {
             return ResponseEntity.badRequest().body("Failed to fetch user name: " + e.getMessage());
         }
     }
+    //커플 이름으로 첫번째 계정을 뽑아오기
+    @GetMapping("/firstEmailGet")
+    public ResponseEntity<String> firstEmailGet(@RequestParam String coupleName){
+        try {
+            String firstEmail = memberService.firstEmailGet(coupleName);
+            return ResponseEntity.ok(firstEmail);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Failed to fetch user name: " + e.getMessage());
+        }
+    }
+
 
 }

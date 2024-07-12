@@ -107,4 +107,27 @@ public class MainService {
             return false;
         }
     }
+    //커플 검색에 맞는 리스트 값.
+    public List<String> visitCoupleNameSearchList(String coupleName){
+        List<String> resultList = new ArrayList<>();
+        try {
+            Optional<List<CoupleEntity>> optionalCoupleEntities = coupleRepository.findByCoupleNameContaining(coupleName);
+
+            optionalCoupleEntities.ifPresent(entities -> {
+                for (CoupleEntity entity : entities) {
+                    resultList.add(entity.getCoupleName());
+                }
+            });
+
+            if (optionalCoupleEntities.isEmpty() || resultList.isEmpty()) {
+                throw new RuntimeException("검색된 커플 이름이 없습니다.");
+            }
+        } catch (Exception e) {
+            // 필요에 따라 예외 처리를 수행합니다
+            e.printStackTrace();
+            // 애플리케이션의 오류 처리 전략에 따라 사용자 정의 예외를 throw하거나 처리합니다
+        }
+
+        return resultList;
+    }
 }

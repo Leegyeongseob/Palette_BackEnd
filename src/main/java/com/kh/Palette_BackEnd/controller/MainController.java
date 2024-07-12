@@ -31,4 +31,10 @@ public class MainController {
     public ResponseEntity<Boolean> saveDday(@RequestParam String coupleName, @RequestParam String dDay){
         return ResponseEntity.ok(mainService.saveDday(coupleName,dDay));
     }
+    @GetMapping("/visitCoupleNameSearchList")
+    //커플 검색에 맞는 리스트 값.
+    public ResponseEntity<List<String>>visitCoupleNameSearchList(@RequestParam String coupleName){
+        return ResponseEntity.ok(mainService.visitCoupleNameSearchList(coupleName));
+    }
+
 }

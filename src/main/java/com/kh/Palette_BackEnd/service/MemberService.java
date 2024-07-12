@@ -196,15 +196,6 @@ public class MemberService {
                 memberFirstEntityOpt.ifPresent(memberEntity -> list.add(memberEntity.getProfileImgUrl()));
 
             }
-
-
-
-
-
-
-
-
-
             // 주어진 이메일이 커플의 firstEmail 또는 secondEmail과 일치하지 않는 경우
             if (!email.equals(firstEmail) && !email.equals(secondEmail)) {
                 // firstEmail에 해당하는 멤버의 프로필 이미지 URL 가져오기
@@ -232,6 +223,15 @@ public class MemberService {
             return MemberResDto.fromMemberEntity(memberEntity);
         } else {
             throw new IllegalArgumentException("해당 이메일로 사용자를 찾을 수 없습니다: " + email);
+        }
+    }
+    public String firstEmailGet(String coupleName){
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        if(coupleEntityOpt.isPresent()){
+            return coupleEntityOpt.get().getFirstEmail();
+        }
+        else{
+            throw new RuntimeException("BD에 해당 커플이 존재하지 않습니다.");
         }
     }
 }
