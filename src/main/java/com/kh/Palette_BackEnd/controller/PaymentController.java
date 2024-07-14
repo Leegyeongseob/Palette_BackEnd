@@ -32,7 +32,7 @@ public class PaymentController {
 
     @GetMapping("/amount")
     public ResponseEntity<Integer> getAmount(@RequestParam String email) {
-        int total_amount = paymentService.getAmount(email);
-        return ResponseEntity.ok(total_amount);
+        int totalAmount = paymentService.getAmount(email); // 수정: 기본형 int를 사용하여 null 문제 방지
+        return ResponseEntity.ok(totalAmount);
     }
 }

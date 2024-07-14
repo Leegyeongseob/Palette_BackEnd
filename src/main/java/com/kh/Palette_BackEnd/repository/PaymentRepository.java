@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     Optional<PaymentEntity> findByCustomerEmail(String email);
 
-    PaymentEntity findByCouple(CoupleEntity couple);
+    Optional<PaymentEntity> findByCouple(CoupleEntity couple);
 
     Optional<PaymentEntity> findByCoupleAndTotalAmount(CoupleEntity couple, Integer totalAmount);
 }

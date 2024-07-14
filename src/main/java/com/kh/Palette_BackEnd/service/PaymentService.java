@@ -28,20 +28,21 @@ import java.util.stream.Collectors;
 @Transactional
 public class PaymentService {
 
-    private DiaryRepository diaryRepository;
+    @Autowired
     private CoupleRepository coupleRepository;
+
     @Autowired
     private PaymentRepository paymentRepository;
-    @PersistenceContext
-    EntityManager em;
 
+    @PersistenceContext
+    private EntityManager em;
     public String savePayment(PaymentReqDto paymentRequestDto) {
         try {
             Optional<CoupleEntity> coupleOpt = coupleRepository.findByFirstEmailOrSecondEmail(paymentRequestDto.getCustomerEmail(), paymentRequestDto.getCustomerEmail());
             CoupleEntity couple = coupleOpt.orElseThrow(() -> new RuntimeException("Couple not found"));
-            Integer totalAmount = paymentRequestDto.getTotalAmount();
+//            Integer totalAmount = paymentRequestDto.getTotalAmount();
 
-            Optional<PaymentEntity> existingPaymentOpt = paymentRepository.findByCoupleAndTotalAmount(couple, totalAmount);
+            Optional<PaymentEntity> existingPaymentOpt = paymentRepository.findByCouple(couple);
             if (existingPaymentOpt.isPresent()) {
                 PaymentEntity paymentEntity = existingPaymentOpt.get();
                 paymentEntity.setTotalAmount(paymentEntity.getTotalAmount() + paymentRequestDto.getTotalAmount());
@@ -57,6 +58,7 @@ public class PaymentService {
                 payment.setCustomerPhone(paymentRequestDto.getCustomerPhone());
                 payment.setCustomerEmail(paymentRequestDto.getCustomerEmail());
                 payment.setStatus(paymentRequestDto.getStatus());
+                payment.setCouple(couple); // 수정: 결제 엔티티에 커플 엔티티 설정
                 paymentRepository.saveAndFlush(payment);
                 em.clear();
                 return "신규 구매 값이 추가 되었습니다.";
@@ -67,12 +69,15 @@ public class PaymentService {
             throw new RuntimeException("Failed to save gallery", e);
         }
     }
+
     @Transactional
-    public Integer getAmount (String email) {
+    public Integer getAmount(String email) {
         CoupleEntity couple = coupleRepository.findByFirstEmailOrSecondEmail(email, email)
                 .orElseThrow(() -> new RuntimeException("Couple not found"));
 
-        PaymentEntity totalAmount = paymentRepository.findByCouple(couple);
-        return totalAmount.getTotalAmount();
+        PaymentEntity payment = paymentRepository.findByCouple(couple)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        return payment.getTotalAmount();
     }
 }
