@@ -1,24 +1,17 @@
 package com.kh.Palette_BackEnd.service;
 
-import com.kh.Palette_BackEnd.dto.reqdto.GuestBookReqDto;
-import com.kh.Palette_BackEnd.dto.resdto.GuestBookResDto;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
 import com.kh.Palette_BackEnd.entity.GuestBookEntity;
 import com.kh.Palette_BackEnd.entity.MemberEntity;
 import com.kh.Palette_BackEnd.repository.CoupleRepository;
 import com.kh.Palette_BackEnd.repository.GuestBookRepository;
 import com.kh.Palette_BackEnd.repository.MemberRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class GuestBookService {
 
     @Autowired
@@ -26,88 +19,62 @@ public class GuestBookService {
 
     @Autowired
     private CoupleRepository coupleRepository;
+
     @Autowired
     private MemberRepository memberRepository;
 
-    /**
-     * 방명록을 생성하거나 수정하는 메소드
-     */
-    @Transactional
-    public GuestBookResDto saveOrUpdateGuestBook(GuestBookReqDto guestBookReqDto) {
-        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(guestBookReqDto.getCoupleName());
-        CoupleEntity couple = coupleEntityOpt.get();
-        Optional<MemberEntity>  memberEntityOpt = memberRepository.findByEmail(guestBookReqDto.getMemberEmail());
-        MemberEntity member = memberEntityOpt.get();
-        if (guestBookReqDto.getId() == null) {
-            // 방명록 생성
-            GuestBookEntity guestBookEntity = new GuestBookEntity();
-            guestBookEntity.setTitle(guestBookReqDto.getTitle());
-            guestBookEntity.setContents(guestBookReqDto.getContents());
-            guestBookEntity.setMember(member);
-            guestBookEntity.setCouple(couple);
+    // 특정 커플의 방명록 항목들을 가져오는 메서드
+    public List<GuestBookEntity> getGuestBookEntries(String coupleName) {
+        CoupleEntity couple = coupleRepository.findByCoupleName(coupleName)
+                .orElseThrow(() -> new RuntimeException("Couple not found"));
+        return guestBookRepository.findByCouple(couple);
+    }
 
-            GuestBookEntity savedEntity = guestBookRepository.save(guestBookEntity);
-            return convertToDto(savedEntity);
-        } else {
-            // 방명록 수정
-            Optional<GuestBookEntity> guestBookOpt = guestBookRepository.findById(guestBookReqDto.getId());
-            GuestBookEntity guestBookEntity = guestBookOpt.orElseThrow(() -> new RuntimeException("GuestBook not found with id " + guestBookReqDto.getId()));
+    // 방명록 항목을 추가하는 메서드
+    public GuestBookEntity addGuestBookEntry(String coupleName, String memberEmail,String contents) {
+        CoupleEntity couple = coupleRepository.findByCoupleName(coupleName)
+                .orElseThrow(() -> new RuntimeException("Couple not found"));
+        MemberEntity member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
 
-            guestBookEntity.setTitle(guestBookReqDto.getTitle());
-            guestBookEntity.setContents(guestBookReqDto.getContents());
+        GuestBookEntity entry = GuestBookEntity.builder()
+                .couple(couple)
+                .member(member)
+                .contents(contents)
+                .build();
 
-            GuestBookEntity updatedEntity = guestBookRepository.save(guestBookEntity);
-            return convertToDto(updatedEntity);
+        return guestBookRepository.save(entry);
+    }
+
+    // 방명록 항목을 수정하는 메서드
+    public void updateGuestBookEntry(Long entryId,String contents , String requesterEmail) {
+        GuestBookEntity entry = guestBookRepository.findById(entryId)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
+
+        CoupleEntity couple = entry.getCouple();
+        if (!entry.getMember().getEmail().equals(requesterEmail) &&
+                !couple.getFirstEmail().equals(requesterEmail) &&
+                !couple.getSecondEmail().equals(requesterEmail)) {
+            throw new RuntimeException("Only the author or couple members can update this entry");
         }
+
+
+        entry.setContents(contents);
+        guestBookRepository.save(entry);
     }
 
-    /**
-     * 모든 방명록을 조회하는 메소드
-     */
-    public List<GuestBookResDto> getAllGuestBooks() {
-        return guestBookRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
+    // 방명록 항목을 삭제하는 메서드
+    public void deleteGuestBookEntry(Long entryId, String requesterEmail) {
+        GuestBookEntity entry = guestBookRepository.findById(entryId)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
 
-    /**
-     * 특정 ID로 방명록을 조회하는 메소드
-     */
-    public Optional<GuestBookResDto> getGuestBookById(Long id) {
-        return guestBookRepository.findById(id)
-                .map(this::convertToDto);
-    }
+        CoupleEntity couple = entry.getCouple();
+        if (!entry.getMember().getEmail().equals(requesterEmail) &&
+                !couple.getFirstEmail().equals(requesterEmail) &&
+                !couple.getSecondEmail().equals(requesterEmail)) {
+            throw new RuntimeException("Only the author or couple members can delete this entry");
+        }
 
-    /**
-     * 방명록을 삭제하는 메소드
-     */
-    @Transactional
-    public void deleteGuestBook(Long id) {
-        guestBookRepository.deleteById(id);
-    }
-
-    /**
-     * Couple 이름으로 방명록 목록을 조회하는 메소드
-     */
-    public List<GuestBookResDto> getGuestBooksByCoupleName(String coupleName) {
-        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
-        CoupleEntity couple = coupleEntityOpt.orElseThrow(() -> new RuntimeException("Couple not found with name: " + coupleName));
-
-        List<GuestBookEntity> guestBooks = guestBookRepository.findByCoupleCoupleName(coupleName);
-        return guestBooks.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * GuestBookEntity를 GuestBookResDto로 변환하는 메소드
-     */
-    private GuestBookResDto convertToDto(GuestBookEntity guestBookEntity) {
-        GuestBookResDto dto = new GuestBookResDto();
-        dto.setId(guestBookEntity.getId());
-        dto.setTitle(guestBookEntity.getTitle());
-        dto.setContents(guestBookEntity.getContents());
-        dto.setCoupleName(guestBookEntity.getCouple().getCoupleName());
-        return dto;
+        guestBookRepository.delete(entry);
     }
 }

@@ -10,8 +10,6 @@ import lombok.*;
 public class GuestBookReqDto {
     private Long id;
 
-    private String title;
-
     private String contents;
 
     private String memberEmail;

@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 public class GuestBookResDto {
     private Long id;
 
-    private String title;
-
     private LocalDateTime regDateTime;
 
     private String contents;
 
-    private String memberEmail;
+    private String memberNickName;
+
+    private String imgUrl;
 
     private String coupleName;
 }

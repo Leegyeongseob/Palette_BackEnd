@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GuestBookRepository extends JpaRepository<GuestBookEntity, Long> {
-    // 특정 커플의 방명록 조회
-    List<GuestBookEntity> findByCoupleCoupleName(String coupleName);
-
-    // 특정 사용자의 방명록 조회
-    List<GuestBookEntity> findByMemberEmail(String email);
-
+    List<GuestBookEntity> findByCouple(CoupleEntity couple);
+    List<GuestBookEntity> findByMember_Email(String email);
 }

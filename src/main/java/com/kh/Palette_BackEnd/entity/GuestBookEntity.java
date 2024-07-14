@@ -19,7 +19,6 @@ public class GuestBookEntity {
     @Column(name="guestBook_id")
     private Long id;
 
-    private String title;
     // 작성 날짜, 시간
     private LocalDateTime RegDate;
     // 내용
