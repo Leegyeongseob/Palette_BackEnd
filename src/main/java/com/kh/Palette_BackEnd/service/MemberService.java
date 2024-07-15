@@ -242,4 +242,15 @@ public class MemberService {
             return "Db에 존재하지 않습니다.";
         }
     }
+    // 이메일로 imgurl 가져오기
+    public String searchProfileUrl(String email){
+        Optional<MemberEntity> memberEntityOpt = memberRepository.findByEmail(email);
+        if(memberEntityOpt.isPresent()){
+            MemberEntity member = memberEntityOpt.get();
+            return member.getProfileImgUrl();
+        }
+        else{
+            return null;
+        }
+    }
 }

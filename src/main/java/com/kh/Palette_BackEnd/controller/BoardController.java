@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -56,10 +57,14 @@ public class BoardController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoard(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/delete")
+    public ResponseEntity<Boolean> deleteBoard(@RequestParam Long id) {
+        return ResponseEntity.ok(boardService.deleteBoard(id));
+    }
+    //id로 board 정보 가져오기
+    @PostMapping("/fetchBoardById")
+    public ResponseEntity<BoardResDto> fetchBoardById(@RequestBody Map<String,Long> id){
+        return ResponseEntity.ok(boardService.fetchBoardById(id.get("id")));
     }
 
     // 예외처리
@@ -67,4 +72,5 @@ public class BoardController {
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+
 }

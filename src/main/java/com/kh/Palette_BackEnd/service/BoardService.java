@@ -1,5 +1,6 @@
 package com.kh.Palette_BackEnd.service;
 
+import com.fasterxml.jackson.annotation.OptBoolean;
 import com.kh.Palette_BackEnd.dto.reqdto.BoardReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.BoardResDto;
 import com.kh.Palette_BackEnd.entity.BoardEntity;
@@ -17,7 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +42,6 @@ public class BoardService {
                 .orElseThrow(() -> new RuntimeException("Member not found"));
         CoupleEntity couple = coupleRepository.findByCoupleName(coupleName)
                 .orElseThrow(() -> new RuntimeException("Couple not found"));
-
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setTitle(boardReqDto.getTitle());
         boardEntity.setContents(boardReqDto.getContents());
@@ -138,9 +141,26 @@ public class BoardService {
 
     // 게시글 삭제 기능
     @Transactional
-    public void deleteBoard(Long id) {
-        BoardEntity boardEntity = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Board not found with id " + id));
-        boardRepository.delete(boardEntity);
+    public boolean deleteBoard(Long id) {
+        Optional<BoardEntity> boardEntityOpt = boardRepository.findById(id);
+        if(boardEntityOpt.isPresent()){
+            BoardEntity boardEntity = boardEntityOpt.get();
+            boardRepository.delete(boardEntity);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    // id로 게시글 가져오기
+    public BoardResDto fetchBoardById(Long id){
+        Optional<BoardEntity> boardEntityOpt = boardRepository.findById(id);
+        if(boardEntityOpt.isPresent()){
+            BoardEntity boardEntity = boardEntityOpt.get();
+            return boardEntity.toBoardResDto();
+        }
+        else{
+            throw new EntityNotFoundException("Board with id " + id + " not found");
+        }
     }
 }

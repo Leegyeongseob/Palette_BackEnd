@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -128,23 +129,16 @@ public class AuthService {
     }
     // email로 커플이름 search
     public String emailToCoupleNameSearch(String email){
-        try {
-            Optional<MemberEntity> memberEntity = memberRepository.findByEmail(email);
-            if (memberEntity.isPresent()) {
-                MemberEntity member = memberEntity.get();
-                log.info(member.getCouple().getCoupleName());
-                return member.getCouple().getCoupleName();
-            } else {
-                return "계정이 존재하지 않습니다.";
-            }
-        }  catch (DataAccessException e) {
-                // 데이터 접근 예외 처리 (예: 데이터베이스 접근 오류)
-                return "커플이름 search 실패: 데이터베이스 접근 중 오류가 발생했습니다.";
-            } catch (Exception e) {
-                // 그 외의 예외 처리
-                return "커플이름 search 중 오류가 발생했습니다.";
-            }
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByFirstEmailOrSecondEmail(email,email);
+        if(coupleEntityOpt.isPresent()){
+            log.info(coupleEntityOpt.get().getCoupleName());
+            return coupleEntityOpt.get().getCoupleName();
         }
+        else {
+            // 커플을 찾지 못한 경우 예외를 던집니다.
+            throw new EntityNotFoundException("해당 이메일로 커플을 찾을 수 없습니다: " + email);
+        }
+    }
     //두번째 커플 계정 존재 확인
     public boolean secondEmailExist(String coupleName) {
         return coupleRepository.findByCoupleName(coupleName)

@@ -75,6 +75,15 @@ public class MemberController {
             return ResponseEntity.badRequest().body("Failed to fetch user name: " + e.getMessage());
         }
     }
+    //이메일로 프로필url 가져오기
+    @GetMapping("/searchProfileUrl")
+    public ResponseEntity<String> searchProfileUrl(@RequestParam String email){
+        try{
+            return ResponseEntity.ok(memberService.searchProfileUrl(email));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Failed to fetch profileUrl: " + e.getMessage());
+        }
+    }
 
 
 }

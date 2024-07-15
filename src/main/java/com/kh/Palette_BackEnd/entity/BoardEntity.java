@@ -2,6 +2,7 @@ package com.kh.Palette_BackEnd.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.kh.Palette_BackEnd.dto.resdto.BoardResDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,4 +48,17 @@ public class BoardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_id", nullable = false)
     private CoupleEntity couple;
+
+    // 엔티티를 DTO로 변환하는 메서드
+    public BoardResDto toBoardResDto() {
+        return BoardResDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .regDate(this.regDate)
+                .imgUrl(this.imgUrl)
+                .contents(this.contents)
+                .memberEmail(this.member != null ? this.member.getEmail() : null)
+                .boardListId(this.boardList != null ? this.boardList.getId() : null)
+                .build();
+    }
 }
