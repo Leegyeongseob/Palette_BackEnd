@@ -1,9 +1,11 @@
 package com.kh.Palette_BackEnd.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,7 +23,7 @@ public class BoardEntity {
 
     private String title;
 
-    private LocalDateTime regDate;
+    private LocalDate regDate;
 
     private String imgUrl;
 
@@ -39,6 +41,10 @@ public class BoardEntity {
     // DB에 값을 저장할 때 시간 값 저장.
     @PrePersist
     public void prePersist(){
-        regDate = LocalDateTime.now();
+        regDate = LocalDate.now();
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "couple_id", nullable = false)
+    private CoupleEntity couple;
 }

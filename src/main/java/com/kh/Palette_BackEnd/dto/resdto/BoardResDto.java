@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class BoardResDto {
     private Long id;
     private String title;
-    private LocalDateTime regDate;
+    private LocalDate regDate;
     private String imgUrl;
     private String contents;
     private String memberEmail;
