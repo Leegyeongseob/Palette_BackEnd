@@ -4,6 +4,7 @@ import com.kh.Palette_BackEnd.dto.reqdto.BoardReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.BoardResDto;
 import com.kh.Palette_BackEnd.entity.BoardEntity;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
+import com.kh.Palette_BackEnd.entity.GuestBookEntity;
 import com.kh.Palette_BackEnd.entity.MemberEntity;
 import com.kh.Palette_BackEnd.repository.BoardRepository;
 import com.kh.Palette_BackEnd.repository.CoupleRepository;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +53,7 @@ public class BoardService {
         boardResDto.setRegDate(savedEntity.getRegDate());
         boardResDto.setImgUrl(savedEntity.getImgUrl());
         boardResDto.setContents(savedEntity.getContents());
-        boardResDto.setMemberEmail(savedEntity.getMember().getEmail());
+//        boardResDto.setMemberEmail(savedEntity.getMember().getEmail());
 
         return boardResDto;
     }
@@ -67,6 +71,31 @@ public class BoardService {
             return boardResDto;
         });
     }
+    // 커플 이름으로 게시글 목록 조회
+    public List<BoardResDto> getBoardByCoupleName(String coupleName) {
+        // 1. 커플 이름으로 CoupleEntity 조회
+        CoupleEntity couple = coupleRepository.findByCoupleName(coupleName)
+                .orElseThrow(() -> new RuntimeException("Couple not found with name: " + coupleName));
+
+        // 2. 해당 커플에 속한 게시글 목록 조회
+        List<BoardEntity> boardEntities = boardRepository.findByCouple(couple);
+
+        // 3. BoardEntity 리스트를 BoardResDto 리스트로 변환
+        List<BoardResDto> boardResDtoList = boardEntities.stream()
+                .map(boardEntity -> {
+                    BoardResDto boardResDto = new BoardResDto();
+                    boardResDto.setId(boardEntity.getId());
+                    boardResDto.setTitle(boardEntity.getTitle());
+                    boardResDto.setRegDate(boardEntity.getRegDate());
+                    // 필요한 정보 추가 설정
+                    return boardResDto;
+                })
+                .collect(Collectors.toList());
+
+        // 4. BoardResDto 리스트 반환
+        return boardResDtoList;
+    }
+
 
 
     // 게시글 상세보기

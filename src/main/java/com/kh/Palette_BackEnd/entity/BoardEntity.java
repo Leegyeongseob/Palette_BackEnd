@@ -29,9 +29,9 @@ public class BoardEntity {
 
     private String contents;
 
-    // 작성자를 불러오기 위한 조인
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="member_email", referencedColumnName = "email")
+    //작성자를 불러오기 위한 조인
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="email")
     private MemberEntity member;
 
     @ManyToOne(fetch = FetchType.LAZY)

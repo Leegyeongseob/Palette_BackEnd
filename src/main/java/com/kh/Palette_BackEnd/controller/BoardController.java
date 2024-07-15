@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/boards")
@@ -31,6 +33,12 @@ public class BoardController {
             @RequestParam(defaultValue = "10") int size) {
         Page<BoardResDto> boards = boardService.getAllBoards(page, size);
         return ResponseEntity.ok(boards);
+    }
+    // 게시글 커플이름으로 조회
+    @GetMapping("/couple/{coupleName}")
+    public ResponseEntity<List<BoardResDto>> getBoardByCoupleName(@PathVariable String coupleName) {
+        List<BoardResDto> boardList = boardService.getBoardByCoupleName(coupleName);
+        return ResponseEntity.ok(boardList);
     }
 
     // 게시글 상세보기
