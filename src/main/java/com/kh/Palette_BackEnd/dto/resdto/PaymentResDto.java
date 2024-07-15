@@ -12,4 +12,5 @@ import java.util.List;
 public class PaymentResDto {
     private String customerEmail;
     private int totalAmount;
+    private List<String> orderName;
 }
