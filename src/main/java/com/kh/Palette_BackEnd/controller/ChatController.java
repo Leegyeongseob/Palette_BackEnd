@@ -1,13 +1,17 @@
 package com.kh.Palette_BackEnd.controller;
 
+import com.kh.Palette_BackEnd.dto.ChatRoomResDto;
+import com.kh.Palette_BackEnd.dto.reqdto.ChatRoomReqDto;
 import com.kh.Palette_BackEnd.entity.ChatEntity;
 import com.kh.Palette_BackEnd.dto.ChatMessageDto;
 import com.kh.Palette_BackEnd.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -17,17 +21,50 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatController {
     private final ChatService chatService;
-
-    @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody ChatMessageDto chatMessageDto) {
-        chatService.sendMessageToUser(chatMessageDto.getSender(), chatMessageDto.getReceiver(), chatMessageDto);
-        return ResponseEntity.ok("Message sent and saved");
+    @PostMapping("/new")
+    public ResponseEntity<String> createRoom(@RequestBody ChatRoomReqDto chatRoomDto) {
+        log.warn("chatRoomDto : {}", chatRoomDto);
+        ChatRoomResDto room = chatService.createRoom(chatRoomDto.getName());
+        System.out.println(room.getRoomId());
+        return ResponseEntity.ok(room.getRoomId());
     }
 
-    @GetMapping("/messages")
-    public ResponseEntity<List<ChatEntity>> getChatMessages(@RequestParam String sender, @RequestParam String receiver) {
-        return ResponseEntity.ok(chatService.getChatMessages(sender, receiver));
+    @PostMapping("/messages") //savemessage
+    public ResponseEntity<Void> saveMessage(@RequestBody ChatMessageDto chatMessageDto) {
+        chatService.saveMessage(chatMessageDto.getRoomId(), chatMessageDto.getSender(),chatMessageDto.getReceiver(), chatMessageDto.getMessage() );
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<List<ChatRoomResDto>> findAllRoom() {
+        return ResponseEntity.ok(chatService.findAllRoom());
+    }
+    // 방 정보 가져오기
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<ChatRoomResDto> findRoomById(@PathVariable String roomId) {
+        return ResponseEntity.ok(chatService.findRoomById(roomId));
+    }
+    @GetMapping("/messages/{roomId}")
+    public ResponseEntity<List<ChatMessageDto>> getRecentMessages(@PathVariable String roomId) {
+        List<ChatMessageDto> list = new LinkedList<>();
+        List<ChatEntity> chattingList= chatService.getRecentMessages(roomId);
+        for (ChatEntity chat : chattingList) {
+            ChatMessageDto dto = ChatMessageDto.builder()
+                    .message(chat.getChatData())
+                    .roomId(chat.getChatRoom().getRoomId())
+                    .sender(chat.getSender())
+                    .receiver(chat.getReceiver())
+                    .regDate(chat.getRegDate())
+                    .build();
+            list.add(dto);
+        }
+        return ResponseEntity.ok(list);}
+    //     세션 수 가져오기
+//    @GetMapping("/room/{roomId}/sessioncount")
+//    public ResponseEntity<Integer> getSessionCount(@PathVariable String roomId) {
+//        return ResponseEntity.ok(chatService.getSessionCount(roomId));
+//    }
 
 }
+
+
