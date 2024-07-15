@@ -3,8 +3,13 @@ package com.kh.Palette_BackEnd.service;
 import com.kh.Palette_BackEnd.dto.reqdto.BoardReqDto;
 import com.kh.Palette_BackEnd.dto.resdto.BoardResDto;
 import com.kh.Palette_BackEnd.entity.BoardEntity;
+import com.kh.Palette_BackEnd.entity.CoupleEntity;
+import com.kh.Palette_BackEnd.entity.MemberEntity;
 import com.kh.Palette_BackEnd.repository.BoardRepository;
+import com.kh.Palette_BackEnd.repository.CoupleRepository;
+import com.kh.Palette_BackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,19 +22,35 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CoupleRepository coupleRepository;
+
     //게시글 생성 기능
     @Transactional
-    public BoardResDto createBoard(BoardReqDto boardReqDto) {
+    public BoardResDto createBoard(BoardReqDto boardReqDto, String coupleName) {
+        MemberEntity member = memberRepository.findByEmail(boardReqDto.getMemberEmail())
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        CoupleEntity couple = coupleRepository.findByCoupleName(coupleName)
+                .orElseThrow(() -> new RuntimeException("Couple not found"));
+
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setTitle(boardReqDto.getTitle());
         boardEntity.setContents(boardReqDto.getContents());
         boardEntity.setImgUrl(boardReqDto.getImgUrl());
+        boardEntity.setMember(member);
+        boardEntity.setCouple(couple);
 
         BoardEntity savedEntity = boardRepository.save(boardEntity);
         BoardResDto boardResDto = new BoardResDto();
         boardResDto.setId(savedEntity.getId());
         boardResDto.setTitle(savedEntity.getTitle());
         boardResDto.setRegDate(savedEntity.getRegDate());
+        boardResDto.setImgUrl(savedEntity.getImgUrl());
+        boardResDto.setContents(savedEntity.getContents());
+        boardResDto.setMemberEmail(savedEntity.getMember().getEmail());
+
         return boardResDto;
     }
 

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface GuestBookRepository extends JpaRepository<GuestBookEntity, Long> {
     List<GuestBookEntity> findByCouple(CoupleEntity couple);
-    List<GuestBookEntity> findByMember_Email(String email);
+    List<GuestBookEntity> findAll(); // 모든 방명록을 조회하는 메서드
 }

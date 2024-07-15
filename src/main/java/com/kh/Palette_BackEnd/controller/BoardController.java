@@ -18,9 +18,9 @@ public class BoardController {
     private final BoardService boardService;
 
     // 게시글 생성
-    @PostMapping("/save")
-    public ResponseEntity<BoardResDto> createBoard(@RequestBody BoardReqDto boardReqDto) {
-        BoardResDto createdBoard = boardService.createBoard(boardReqDto);
+    @PostMapping("/save/{coupleName}")
+    public ResponseEntity<BoardResDto> createBoard(@PathVariable String coupleName, @RequestBody BoardReqDto boardReqDto ) {
+        BoardResDto createdBoard = boardService.createBoard(boardReqDto, coupleName);
         return ResponseEntity.ok(createdBoard);
     }
 

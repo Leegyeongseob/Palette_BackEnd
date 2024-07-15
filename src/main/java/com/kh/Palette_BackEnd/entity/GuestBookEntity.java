@@ -20,7 +20,7 @@ public class GuestBookEntity {
     private Long id;
 
     // 작성 날짜, 시간
-    private LocalDateTime RegDate;
+    private LocalDateTime regDate;
     // 내용
     private String contents;
 
@@ -38,6 +38,6 @@ public class GuestBookEntity {
     // DB에 값을 저장할때 시간 값 저장.
     @PrePersist
     public void prePersist(){
-        RegDate = LocalDateTime.now();
+        regDate = LocalDateTime.now();
     }
 }

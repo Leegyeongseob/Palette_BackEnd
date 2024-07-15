@@ -9,7 +9,9 @@ import com.kh.Palette_BackEnd.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GuestBookService {
@@ -22,6 +24,12 @@ public class GuestBookService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    // 모든 방명록 조회
+    public List<GuestBookEntity> getAllGuestBooks() {
+        return guestBookRepository.findAll();
+    }
+
 
     // 특정 커플의 방명록 항목들을 가져오는 메서드
     public List<GuestBookEntity> getGuestBookEntries(String coupleName) {
@@ -76,5 +84,29 @@ public class GuestBookService {
         }
 
         guestBookRepository.delete(entry);
+    }
+    // 이메일로 이미지 url 가져오는 메서드
+    public String getProfileImgUrlByEmail(String email) {
+        Optional<MemberEntity> member = memberRepository.findByEmail(email);
+        return member.map(MemberEntity::getProfileImgUrl).orElse(null);
+    }
+    public String searchImgUrl(String email){
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByFirstEmailOrSecondEmail(email,email);
+        if(coupleEntityOpt.isPresent()){
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            String firstEmail = coupleEntity.getFirstEmail();
+            String secondEmail = coupleEntity.getSecondEmail();
+            if(firstEmail.equals(email)){
+                return "true"; // firstEmail과 email이 같으면 true 반환
+            } else if (secondEmail.equals(email)) {
+                return "false"; // secondEmail과 email이 같으면 false 반환
+            } else {
+                // 예외 처리: firstEmail과 secondEmail 둘 다 email과 다른 경우 (이 경우는 발생하지 않아야 함)
+                throw new IllegalStateException("커플 테이블에 이메일이 잘못 저장되어 있습니다.");
+            }
+        } else {
+            // 커플을 찾지 못한 경우 예외를 던집니다.
+            throw new EntityNotFoundException("해당 이메일로 커플을 찾을 수 없습니다: " + email);
+        }
     }
 }
