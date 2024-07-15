@@ -72,7 +72,6 @@ public class MainService {
                 Optional<MemberEntity> memberSecondEntityOpt = memberRepository.findByEmail(secondEmail);
                 memberFirstEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
                 memberSecondEntityOpt.ifPresent(memberEntity -> nickNames.add(memberEntity.getNickName()));
-
             }
 
         }

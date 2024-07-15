@@ -50,7 +50,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.profileUrlSave(email,url));
     }
     //커플 프로필 url을 가져오기
-    @GetMapping("coupleProfileUrl")
+    @GetMapping("/coupleProfileUrl")
     public ResponseEntity<List<String>> coupleProfileUrl(@RequestParam String coupleName,@RequestParam String email){
         return ResponseEntity.ok(memberService.coupleProfileUrl(coupleName, email));
     }
