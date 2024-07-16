@@ -3,6 +3,7 @@ package com.kh.Palette_BackEnd.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.Palette_BackEnd.dto.ChatMessageDto;
 import com.kh.Palette_BackEnd.dto.ChatRoomResDto;
+import com.kh.Palette_BackEnd.entity.BoardEntity;
 import com.kh.Palette_BackEnd.entity.ChatEntity;
 import com.kh.Palette_BackEnd.entity.ChatRoomEntity;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
@@ -12,7 +13,11 @@ import com.kh.Palette_BackEnd.repository.CoupleRepository;
 import com.kh.Palette_BackEnd.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -86,6 +91,7 @@ public class ChatService {
         }
     }
 
+
     // 채팅방에 입장한 세션 추가
     public void addSessionAndHandleEnter(String roomId, WebSocketSession session, ChatMessageDto chatMessage) {
         ChatRoomResDto room = findRoomById(roomId);
@@ -95,14 +101,8 @@ public class ChatService {
         }
     }
 
-//    public void sendMessageToUser(String roomId, ChatMessageDto message) {
-//        ChatRoomResDto room = findRoomById(roomId);
-//        if (room != null) {
-//            for (WebSocketSession session : room.getSessions()) {
-//                sendMessage(session, message);
-//            }
-//        }
-//    }
+
+
 
     public void saveMessage(String roomId, String sender,String receiver, String chatData) {
         ChatRoomEntity chatRoom = chattingRoomRepository.findById(roomId)

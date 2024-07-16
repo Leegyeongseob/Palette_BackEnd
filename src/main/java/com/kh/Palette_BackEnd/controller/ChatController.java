@@ -4,9 +4,12 @@ import com.kh.Palette_BackEnd.dto.ChatRoomResDto;
 import com.kh.Palette_BackEnd.dto.reqdto.ChatRoomReqDto;
 import com.kh.Palette_BackEnd.entity.ChatEntity;
 import com.kh.Palette_BackEnd.dto.ChatMessageDto;
+import com.kh.Palette_BackEnd.entity.ChatRoomEntity;
+import com.kh.Palette_BackEnd.repository.ChattingRoomRepository;
 import com.kh.Palette_BackEnd.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatController {
     private final ChatService chatService;
+    private final ChattingRoomRepository chattingRoomRepository;
     @PostMapping("/new")
     public ResponseEntity<String> createRoom(@RequestBody ChatRoomReqDto chatRoomDto) {
         log.warn("chatRoomDto : {}", chatRoomDto);
@@ -59,11 +63,6 @@ public class ChatController {
             list.add(dto);
         }
         return ResponseEntity.ok(list);}
-    //     세션 수 가져오기
-//    @GetMapping("/room/{roomId}/sessioncount")
-//    public ResponseEntity<Integer> getSessionCount(@PathVariable String roomId) {
-//        return ResponseEntity.ok(chatService.getSessionCount(roomId));
-//    }
 
 }
 
