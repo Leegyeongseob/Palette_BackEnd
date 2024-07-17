@@ -20,7 +20,6 @@ public class CoupleEmailController {
     //커플이름 뽑아오기
 
     @PostMapping("/coupleEmail")
-
     public ResponseEntity<List<String>> coupleEmail(@RequestBody Map<String,String> email) {
         return ResponseEntity.ok(chatService.coupleEmail(email.get("email")));
     }

@@ -45,17 +45,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     }
 
-//    @Override
-//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//        log.warn("afterConnectionClosed : {}", session);
-//        String roomId = sessionRoomIdMap.remove(session);
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        log.warn("afterConnectionClosed : {}", session);
+        String roomId = sessionRoomIdMap.remove(session);
 //        ChatRoomResDto chatRoom = chatService.findRoomById(roomId);
-//        if (roomId != null) {
-//            ChatMessageDto chatMessage = new ChatMessageDto();
-//            chatMessage.setType(ChatMessageDto.MessageType.CLOSE);
-//            chatService.removeSessionAndHandleExit(roomId, session, chatMessage);
-//        }
-//    }
+        if (roomId != null) {
+            ChatMessageDto chatMessage = new ChatMessageDto();
+            chatMessage.setType(ChatMessageDto.MessageType.CLOSE);
+            chatService.removeSessionAndHandleExit(roomId, session, chatMessage);
+        }
+    }
 }
 
 

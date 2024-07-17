@@ -35,7 +35,7 @@ public class ChatService {
     private final ObjectMapper objectMapper;
     private final ChatRepository chatRepository;
     private final CoupleRepository coupleRepository;
-    private  Map<String, List<WebSocketSession>> userSessions = new HashMap<>();
+    private Map<String, List<WebSocketSession>> userSessions = new HashMap<>();
     private Map<String, ChatRoomResDto> chatRooms;
     private final ChattingRoomRepository chattingRoomRepository;
 
@@ -48,39 +48,58 @@ public class ChatService {
         return new ArrayList<>(chatRooms.values());
     }
 
+//    public List<ChatRoomResDto> findAllRoom(String email) {
+//        List<String> roomIds = chattingRoomRepository.findRoomIdsByEmail(email);
+//        List<ChatRoomResDto> allRooms = new ArrayList<>();
+//
+//        for (String roomId : roomIds) {
+//            // chatRooms에서 roomId에 해당하는 ChatRoomResDto를 가져와서 리스트에 추가
+//            if (chatRooms.containsKey(roomId)) {
+//                allRooms.add(chatRooms.get(roomId));
+//            }
+//        }
+//
+//        return allRooms;
+//    }
+
     public ChatRoomResDto findRoomById(String roomId) {
         return chatRooms.get(roomId);
     }
 
-    public ChatRoomResDto createRoom(String name) {
+    public ChatRoomResDto createRoom(String name, String sender, String receiver) {
         String randomId = UUID.randomUUID().toString();
         log.info("UUID : " + randomId);
         ChatRoomResDto chatRoom = ChatRoomResDto.builder() // 채팅방 생성
                 .roomId(randomId)
                 .name(name)
                 .regDate(LocalDateTime.now())
+                .firstEmail(sender)
+                .secondEmail(receiver)
                 .build();
         chatRooms.put(randomId, chatRoom);  // 방 생성, 키를 UUID로 하고 방 정보를 값으로 저장
-
         ChatRoomEntity room = ChatRoomEntity.builder()
                 .roomId(randomId)
+                .firstEmail(sender)
+                .secondEmail(receiver)
                 .createdAt(LocalDateTime.now())
                 .build();
         chattingRoomRepository.save(room);
         ChatRoomEntity newChatRoom = new ChatRoomEntity();
         newChatRoom.setRoomId(chatRoom.getRoomId());
         newChatRoom.setCreatedAt(chatRoom.getRegDate());
-        chatRooms.put(randomId,chatRoom);
+        newChatRoom.setFirstEmail(chatRoom.getFirstEmail());
+        newChatRoom.setSecondEmail(chatRoom.getSecondEmail());
+        chatRooms.put(randomId, chatRoom);
         return chatRoom;
     }
 
 
     // 채팅방에 입장한 세션 추가
 
-    public void removeUserSession(String userId) {
-        userSessions.remove(userId);
-        log.debug("Session removed for user {}: {}", userId);
-    }
+//    public void removeUserSession(String userId) {
+//        userSessions.remove(userId);
+//        log.debug("Session removed for user {}: {}", userId);
+//    }
 
     public void removeRoom(String roomId) { // 방 삭제
         ChatRoomResDto room = chatRooms.get(roomId); // 방 정보 가져오기
@@ -91,20 +110,17 @@ public class ChatService {
         }
     }
 
-
     // 채팅방에 입장한 세션 추가
     public void addSessionAndHandleEnter(String roomId, WebSocketSession session, ChatMessageDto chatMessage) {
         ChatRoomResDto room = findRoomById(roomId);
         if (room != null) {
             room.getSessions().add(session); // 채팅방에 입장한 세션 추가
-            log.debug("New session added: " + session);
+            log.debug("새 세션 추가!! " + session);
         }
     }
 
 
-
-
-    public void saveMessage(String roomId, String sender,String receiver, String chatData) {
+    public void saveMessage(String roomId, String sender, String receiver, String chatData) {
         ChatRoomEntity chatRoom = chattingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("해당채팅방없음"));
         ChatEntity chat = ChatEntity.builder()
@@ -138,6 +154,7 @@ public class ChatService {
             log.error(e.getMessage(), e);
         }
     }
+
     // 세션 수 가져오기
     public int getSessionCount(String roomId) {
         List<WebSocketSession> sessions = userSessions.get(roomId);
@@ -145,9 +162,9 @@ public class ChatService {
     }
 
     //이전채팅 가져오기
-    public List<ChatEntity> getRecentMessages(String roomId){
+    public List<ChatEntity> getRecentMessages(String roomId) {
         ChatRoomEntity chat = chattingRoomRepository.findById(roomId)
-                .orElseThrow(()->new RuntimeException("그런방없음"));
+                .orElseThrow(() -> new RuntimeException("그런방없음"));
         return chatRepository.findByChatRoom(chat);
     }
 
@@ -185,10 +202,8 @@ public class ChatService {
         if (room != null) {
             room.getSessions().remove(session); // 채팅방에서 퇴장한 세션 제거 // Sessions는 Set<WebSocketSession> 타입, Set에서 특정 session 제거
             if (chatMessage.getSender() != null) { // 채팅방에서 퇴장한 사용자가 있으면
-                chatMessage.setMessage(chatMessage.getSender() + "님이 퇴장했습니다.");
-                sendMessageToAll(roomId, chatMessage); // 채팅방에 퇴장 메시지 전송
             }
-            log.debug("Session removed: " + session);
+            log.debug("이거 세션 지웠다 : " + session);
             if (room.isSessionEmpty()) {
                 removeRoom(roomId);
             }

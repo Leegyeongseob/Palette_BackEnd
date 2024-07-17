@@ -28,9 +28,9 @@ public class ChatController {
     @PostMapping("/new")
     public ResponseEntity<String> createRoom(@RequestBody ChatRoomReqDto chatRoomDto) {
         log.warn("chatRoomDto : {}", chatRoomDto);
-        ChatRoomResDto room = chatService.createRoom(chatRoomDto.getName());
+        ChatRoomResDto room = chatService.createRoom(chatRoomDto.getName(),chatRoomDto.getSender(),chatRoomDto.getReceiver());
         System.out.println(room.getRoomId());
-        return ResponseEntity.ok(room.getRoomId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/messages") //savemessage

@@ -1,12 +1,10 @@
 package com.kh.Palette_BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,4 +22,8 @@ public class ChatRoomEntity {
     private String roomId;
     @Column(name = "Created_At")
     private LocalDateTime createdAt;
+    @Column(name = "first_email")
+    private String firstEmail;
+    @Column(name = "second_email")
+    private String secondEmail;
 }
