@@ -1,6 +1,7 @@
 package com.kh.Palette_BackEnd.controller;
 
 
+import com.kh.Palette_BackEnd.constant.Sex;
 import com.kh.Palette_BackEnd.service.MainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +32,15 @@ public class MainController {
     public ResponseEntity<Boolean> saveDday(@RequestParam String coupleName, @RequestParam String dDay){
         return ResponseEntity.ok(mainService.saveDday(coupleName,dDay));
     }
+    //방문검색 커플이름들 search
     @GetMapping("/visitCoupleNameSearchList")
     //커플 검색에 맞는 리스트 값.
     public ResponseEntity<List<String>>visitCoupleNameSearchList(@RequestParam String coupleName){
         return ResponseEntity.ok(mainService.visitCoupleNameSearchList(coupleName));
     }
-
+    //본인 성별 가져오는 비동기 함수
+    @GetMapping("/mySexSearch")
+    public ResponseEntity<Sex>mySexSearch(@RequestParam String email){
+        return ResponseEntity.ok(mainService.mySexSearch(email));
+    }
 }
