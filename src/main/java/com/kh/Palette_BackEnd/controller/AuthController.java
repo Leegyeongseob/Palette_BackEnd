@@ -71,13 +71,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.secondEmailExist(coupleName.get("couple")));
     }
     //아이디 찾기
-    @PostMapping("findIdResult")
+    @PostMapping("/findIdResult")
     public ResponseEntity<String> findIdResult(@RequestBody FindIdReqDto findIdReqDto){
         return ResponseEntity.ok(authService.findIdResult(findIdReqDto));
     }
     //비밀번호 찾기
-    @PostMapping("findPwdResult")
+    @PostMapping("/findPwdResult")
     public ResponseEntity<String> fondPwdResult(@RequestBody FindPwdDto findPwdDto){
         return ResponseEntity.ok(authService.findPwdResult(findPwdDto));
+    }
+    //이미 커플이 완성되어 있는지 확인.
+    @GetMapping("isExistCouple")
+    public ResponseEntity<Boolean> isExistCouple(@RequestParam String coupleName){
+        return ResponseEntity.ok(authService.isExistCouple(coupleName));
     }
 }

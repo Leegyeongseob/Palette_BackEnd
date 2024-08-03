@@ -169,6 +169,21 @@ public class AuthService {
             return"";
         }
     }
-
+    //이미 커플이 완성되어 있는지 확인.
+    public boolean isExistCouple(String coupleName){
+        Optional<CoupleEntity> coupleEntityOpt = coupleRepository.findByCoupleName(coupleName);
+        if(coupleEntityOpt.isPresent()){
+            CoupleEntity coupleEntity = coupleEntityOpt.get();
+            if(coupleEntity.getFirstEmail() != null && coupleEntity.getSecondEmail() != null){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
 }
 

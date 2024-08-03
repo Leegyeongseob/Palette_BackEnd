@@ -50,19 +50,9 @@ public class ChatController {
     }
     @GetMapping("/messages/{roomId}")
     public ResponseEntity<List<ChatMessageDto>> getRecentMessages(@PathVariable String roomId) {
-        List<ChatMessageDto> list = new LinkedList<>();
-        List<ChatEntity> chattingList= chatService.getRecentMessages(roomId);
-        for (ChatEntity chat : chattingList) {
-            ChatMessageDto dto = ChatMessageDto.builder()
-                    .message(chat.getChatData())
-                    .roomId(chat.getChatRoom().getRoomId())
-                    .sender(chat.getSender())
-                    .receiver(chat.getReceiver())
-                    .regDate(chat.getRegDate())
-                    .build();
-            list.add(dto);
-        }
-        return ResponseEntity.ok(list);}
+        List<ChatMessageDto> list= chatService.getRecentMessages(roomId);
+        return ResponseEntity.ok(list);
+    }
 
 }
 

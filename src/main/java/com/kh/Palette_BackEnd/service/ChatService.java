@@ -162,10 +162,29 @@ public class ChatService {
     }
 
     //이전채팅 가져오기
-    public List<ChatEntity> getRecentMessages(String roomId) {
-        ChatRoomEntity chat = chattingRoomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("그런방없음"));
-        return chatRepository.findByChatRoom(chat);
+    public List<ChatMessageDto> getRecentMessages(String roomId) {
+        List<ChatMessageDto> chatList = new LinkedList<>();
+
+        // roomId로 ChatRoomEntity를 찾음
+        ChatRoomEntity chatRoom = chattingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("해당 채팅방이 존재하지 않습니다."));
+
+        // ChatRoomEntity에 해당하는 ChatEntity 리스트를 조회
+        List<ChatEntity> chattingList = chatRepository.findByChatRoom(chatRoom);
+
+        // 조회된 ChatEntity를 ChatMessageDto로 변환하여 chatList에 추가
+        for (ChatEntity e : chattingList) {
+            ChatMessageDto dto = ChatMessageDto.builder()
+                    .message(e.getChatData())
+                    .roomId(e.getChatRoom().getRoomId())
+                    .sender(e.getSender())
+                    .receiver(e.getReceiver())
+                    .regDate(e.getRegDate())
+                    .build();
+            chatList.add(dto);
+        }
+        // 채팅 메시지 리스트 반환
+        return chatList;
     }
 
     public List<String> coupleEmail(String email) {
