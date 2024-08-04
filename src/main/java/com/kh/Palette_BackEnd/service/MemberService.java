@@ -140,7 +140,6 @@ public class MemberService {
             CoupleEntity entity = coupleEntity.get();
             String firstEmail = entity.getFirstEmail();
             String secondEmail = entity.getSecondEmail();
-
             return firstEmail != null && !firstEmail.isEmpty() && secondEmail != null && !secondEmail.isEmpty();
         } else {
             throw new EntityNotFoundException("해당 커플 이름으로 정보를 찾을 수 없습니다: " + coupleName);
@@ -247,10 +246,15 @@ public class MemberService {
         Optional<MemberEntity> memberEntityOpt = memberRepository.findByEmail(email);
         if(memberEntityOpt.isPresent()){
             MemberEntity member = memberEntityOpt.get();
-            return member.getProfileImgUrl();
+            if(member.getProfileImgUrl() != null){
+                return member.getProfileImgUrl();
+            }
+            else{
+                return "notExist";
+            }
         }
         else{
-            return null;
+            return "notExist";
         }
     }
 }
