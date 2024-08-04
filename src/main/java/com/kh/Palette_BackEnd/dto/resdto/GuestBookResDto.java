@@ -1,6 +1,5 @@
 package com.kh.Palette_BackEnd.dto.resdto;
 
-import com.kh.Palette_BackEnd.constant.Sex;
 import com.kh.Palette_BackEnd.entity.GuestBookEntity;
 import lombok.*;
 
