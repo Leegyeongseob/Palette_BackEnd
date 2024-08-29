@@ -25,12 +25,12 @@ public class GuestBookEntity {
     private String contents;
 
     // 방명록이 속한 커플
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
 
     //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="email")
     private MemberEntity member;
 

@@ -38,7 +38,7 @@ public class PlaceEntity {
     private String y;
 
     // DateCourseEntity와의 관계 매핑
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "dateCourse_id")
     private DateCourseEntity dateCourse;
 

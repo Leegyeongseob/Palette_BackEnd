@@ -31,11 +31,11 @@ public class BoardEntity {
     private String contents;
 
     //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="email")
     private MemberEntity member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name ="boardList_id")
     private BoardListEntity boardList;
 
@@ -45,7 +45,7 @@ public class BoardEntity {
         regDate = LocalDate.now();
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "couple_id", nullable = false)
     private CoupleEntity couple;
 

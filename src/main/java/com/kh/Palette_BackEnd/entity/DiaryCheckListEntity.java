@@ -24,7 +24,7 @@ public class DiaryCheckListEntity {
     @CollectionTable(name = "event", joinColumns = @JoinColumn(name = "diaryCheckList_id"))
     private List<Event> events;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "diary_id")
     private DiaryEntity diary;
 

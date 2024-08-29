@@ -29,12 +29,12 @@ public class GalleryEntity {
     private PagePlusSellStatus pagePlusSellStatus;
 
     // 커플모두 볼수 있어야함. 저장 데이터 불러오기
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "couple_id")
     private CoupleEntity couple;
 
     // 사진 올리는 계정 조인
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="member_id")
     private MemberEntity member;
 }

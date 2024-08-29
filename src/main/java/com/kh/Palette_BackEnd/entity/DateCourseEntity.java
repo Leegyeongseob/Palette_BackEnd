@@ -32,7 +32,7 @@ public class DateCourseEntity {
     private LocalDate date;
 
     // 커플이 둘다 저장된 코스를 볼 수 있어야 함.
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "coupleName")
     private CoupleEntity couple;
 

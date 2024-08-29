@@ -31,7 +31,7 @@ public class DiaryEntity {
     // 해당 날짜의 일기
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "couple_id", nullable = false)
     @JsonBackReference
     private CoupleEntity couple;

@@ -33,7 +33,7 @@ public class ChatEntity {
     }
 
     // chat와 chatRoom간에 순환참조가 일어나는걸 막아주는 JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name = "room_id")
     @JsonIgnore
     private ChatRoomEntity chatRoom;

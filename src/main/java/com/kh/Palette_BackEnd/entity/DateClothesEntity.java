@@ -24,7 +24,7 @@ public class DateClothesEntity {
     private String shoesUrl;
 
     // 커플이 둘다
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn(name="couple_id")
     private CoupleEntity couple;
 
