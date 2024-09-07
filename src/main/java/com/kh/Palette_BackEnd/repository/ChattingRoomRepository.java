@@ -19,4 +19,6 @@ public interface ChattingRoomRepository extends JpaRepository<ChatRoomEntity,Str
     List<String> findRoomIdsByEmail(@Param("email") String email);
 
     ChatRoomEntity deleteByRoomId(String chatRoomEntity);
+
+    void deleteAllByFirstEmailOrSecondEmail(String email, String email1);
 }

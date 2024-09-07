@@ -14,4 +14,7 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity,Long> {
     List<DiaryEntity> findByCouple(CoupleEntity couple);
     Optional<DiaryEntity> findByCoupleAndAnniversary(CoupleEntity couple, LocalDate anniversary);
 
+    Optional<DiaryEntity> findByCoupleId(Long id);
+
+    void deleteByCouple(CoupleEntity coupleEntity);
 }

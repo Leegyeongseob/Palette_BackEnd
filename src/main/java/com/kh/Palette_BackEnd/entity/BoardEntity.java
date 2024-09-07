@@ -31,11 +31,11 @@ public class BoardEntity {
     private String contents;
 
     //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade ={CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="email")
     private MemberEntity member;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name ="boardList_id")
     private BoardListEntity boardList;
 

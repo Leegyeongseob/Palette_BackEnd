@@ -3,6 +3,7 @@ package com.kh.Palette_BackEnd.repository;
 import com.kh.Palette_BackEnd.entity.CoupleEntity;
 import com.kh.Palette_BackEnd.entity.GalleryEntity;
 import com.kh.Palette_BackEnd.entity.GalleryListEntity;
+import com.kh.Palette_BackEnd.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,8 @@ import java.util.Optional;
 public interface GalleryRepository extends JpaRepository<GalleryEntity,Long> {
 
     List<GalleryEntity> findByCouple(CoupleEntity couple);
+
+    void deleteAllByMember(MemberEntity memberEntity);
+
+    void deleteByCoupleId(Long id);
 }

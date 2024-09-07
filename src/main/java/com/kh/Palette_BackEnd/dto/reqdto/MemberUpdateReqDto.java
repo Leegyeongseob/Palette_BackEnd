@@ -12,7 +12,6 @@ import javax.persistence.Column;
 @Builder
 public class MemberUpdateReqDto {
     private String email;
-    private String updateEmail;
     private String pwd;
     private String name;
     private String nickName;

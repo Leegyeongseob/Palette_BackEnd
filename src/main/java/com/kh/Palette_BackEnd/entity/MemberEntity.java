@@ -35,7 +35,7 @@ public class MemberEntity {
 
 
     //두명을 한 커플로 묶기 위한 조인
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="coupleName")
     private CoupleEntity couple;
 

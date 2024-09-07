@@ -34,7 +34,7 @@ public class GalleryEntity {
     private CoupleEntity couple;
 
     // 사진 올리는 계정 조인
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="member_id")
     private MemberEntity member;
 }

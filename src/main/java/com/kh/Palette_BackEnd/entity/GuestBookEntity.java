@@ -30,8 +30,8 @@ public class GuestBookEntity {
     private CoupleEntity couple;
 
     //작성자를 불러오기 위한 조인
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="email")
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="member_id")
     private MemberEntity member;
 
 
